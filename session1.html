@@ -21,11 +21,12 @@
   .slide {
     display: none;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 6vh);
     background: var(--bg);
-    padding: 6vh 10vw;
+    padding: 4vh 10vw 2vh;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto;
   }
   .slide.active { display: flex; }
   .slide.center { align-items: center; text-align: center; }
