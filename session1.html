@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>第1回 Git/GitHub基礎会</title>
+<style>
+  :root {
+    --accent: #2f6f4f;
+    --bg: #fdfdfb;
+    --border: #ddd6c9;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg);
+    padding: 6vh 10vw;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active { display: flex; }
+  .slide.center { align-items: center; text-align: center; }
+
+  .kicker {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .time-badge {
+    background: #f0ece0;
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+  }
+  .slide h1 {
+    font-size: 3rem;
+    margin: 0 0 2rem;
+    border-bottom: 5px solid var(--accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+  }
+  .slide.center h1 { border-bottom: none; padding-bottom: 0; }
+  .slide p, .slide li {
+    font-size: 1.6rem;
+    line-height: 1.9;
+  }
+  .slide ul { padding-left: 1.6rem; }
+
+  .step-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    margin: 0.7rem 0;
+    font-size: 1.6rem;
+  }
+  .step-card .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    margin-right: 0.8rem;
+  }
+  .note {
+    background: #fff7ec;
+    border: 1px dashed #d8b56a;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    color: #6b5220;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+  .term-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+  }
+  .term-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+  }
+  .term-card .term {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .term-card .desc {
+    font-size: 1.15rem;
+    margin-top: 0.3rem;
+    line-height: 1.6;
+  }
+  code {
+    background: #f0ece0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  a.link { color: var(--accent); word-break: break-all; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3vw;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .slide-footer button {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+  }
+  .slide-footer button:disabled { color: #ccc; cursor: default; }
+  .slide-footer .fullscreen-btn { color: var(--muted); font-size: 1rem; }
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .gemini-btn {
+    background: #eef2fb !important;
+    color: #2b3a67 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  body { position: relative; }
+</style>
+</head>
+<body>
+
+  <div class="slide active center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第1回<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>Git/GitHub基礎会</h1>
+    <p>今日は実際に手を動かして、最初のPR（プルリクエスト）を1本出すところまでやります。</p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日のゴール<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>今日やること</h1>
+    <ul>
+      <li>GitHubアカウントを作る</li>
+      <li>このプロジェクトのGitHub Organizationに入る</li>
+      <li>ブラウザだけでブランチを切り、自己紹介ファイルを追加するPRを1本出してみる</li>
+    </ul>
+    <div class="note">完璧に理解できなくてOK。「一連の流れを一度やったことがある」状態を今日のゴールにします。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">そもそも<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>Git / GitHub って何？</h1>
+    <p>
+      <strong>Git</strong>：ファイルの変更履歴を記録する仕組み（自分のPCの中で完結する）。
+      「いつ・誰が・何を変えたか」を全部記録できるので、間違えても前の状態に戻せます。
+    </p>
+    <p>
+      <strong>GitHub</strong>：Gitの履歴をインターネット上に置いて、みんなで共有・共同編集するためのサービス。
+      Google Driveでファイルを共有する感覚に近いですが、「誰が何を変えたか」がもっと厳密に記録されます。
+    </p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日使う用語<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>覚えておきたい4つの言葉</h1>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">リポジトリ (repository)</div>
+        <div class="desc">プロジェクトの中身が入った箱。「フォルダ＋変更履歴」のイメージ</div>
+      </div>
+      <div class="term-card">
+        <div class="term">コミット (commit)</div>
+        <div class="desc">「ここまでの変更を記録します」というスナップショット</div>
+      </div>
+      <div class="term-card">
+        <div class="term">ブランチ (branch)</div>
+        <div class="desc">本体（main）に影響を与えずに作業できる、自分用の枝分かれ</div>
+      </div>
+      <div class="term-card">
+        <div class="term">プルリクエスト (PR)</div>
+        <div class="desc">「この変更を本体に取り込んでください」というお願い・提案</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践1<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>GitHubアカウントを作ろう</h1>
+    <div class="step-card"><span class="num">1</span><a class="link" href="https://github.com/signup" target="_blank">https://github.com/signup</a> を開く</div>
+    <div class="step-card"><span class="num">2</span>メールアドレス・パスワード・ユーザー名を入力</div>
+    <div class="step-card"><span class="num">3</span>メール認証を済ませる</div>
+    <div class="note">ユーザー名は今後ずっと使うものなので、あまり奇抜すぎない名前がおすすめです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践2<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>Organizationへの招待を受ける</h1>
+    <div class="step-card"><span class="num">1</span>招待メールが届く（届いていなければ声をかけてください）</div>
+    <div class="step-card"><span class="num">2</span>メール内の「Join」ボタンから参加を承認する</div>
+    <div class="step-card"><span class="num">3</span>GitHub上でこのプロジェクトのリポジトリが見えるようになる</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践3<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>新しいブランチを切る</h1>
+    <div class="step-card"><span class="num">1</span>リポジトリのページを開く</div>
+    <div class="step-card"><span class="num">2</span>左上の「main」と書かれたブランチ切り替えボタンをクリック</div>
+    <div class="step-card"><span class="num">3</span>好きなブランチ名（例: <code>add-自分の名前</code>）を入力して「Create branch」</div>
+    <div class="note">ブランチは「本体（main）に影響を与えない自分専用の作業スペース」でした（前のスライド参照）。ここではブラウザだけで作れます。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践4（メイン）<span class="time-badge">⏱ 目安15分</span></p>
+    <h1>ファイルを作ってPRを出そう</h1>
+    <div class="step-card"><span class="num">1</span>作ったブランチに切り替えた状態で「Add file」→「Create new file」</div>
+    <div class="step-card"><span class="num">2</span>ファイル名の欄に <code>members/自分の名前.md</code> と入力（スラッシュを書くとフォルダも自動でできる）</div>
+    <div class="step-card"><span class="num">3</span>自己紹介の内容を書く（名前・学年・好きな山など）</div>
+    <div class="step-card"><span class="num">4</span>「Commit changes...」→ 対象ブランチが自分のブランチになっていることを確認して commit</div>
+    <div class="step-card"><span class="num">5</span>表示される「Compare & pull request」からPRを作成する</div>
+    <div class="note">全部ブラウザだけで完結します。ローカルにGitを入れる必要は今日はまだありません（それは次回、実際のコードを触う時に行います）。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">PRを出したあと<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>この後どうなるか</h1>
+    <ul>
+      <li>先輩（ゆずこ）がPRの内容を確認（レビュー）する</li>
+      <li>問題なければ「マージ」されて、本体（main）に取り込まれる</li>
+      <li>修正が必要な場合はコメントが付くので、直してpushし直す</li>
+    </ul>
+    <div class="note">今回は練習用の自己紹介ファイルなので、気軽に出してもらって大丈夫です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">次回予告<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>第2回：開発環境構築会</h1>
+    <ul>
+      <li>自分のPCに開発用のツールを入れる</li>
+      <li>自分専用のGoogleアプリスクリプト（GAS）プロジェクトを作る</li>
+      <li>実際にアプリの画面が自分のPCで表示されるところまで確認する</li>
+    </ul>
+    <div class="note">事前準備：ノートPCとGoogleアカウントをご用意ください。</div>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">まとめ<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>おつかれさまでした！</h1>
+    <p>PRが1本出せたら今日は大成功です。質問があればどうぞ。</p>
+  </div>
+
+<div class="slide-footer">
+  <button id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="footer-center">
+    <span id="count"></span>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
+  </div>
+  <button id="nextBtn" onclick="go(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+    document.getElementById('copyAllBtn').style.display = idx === 0 ? 'inline-block' : 'none';
+  }
+
+  function go(delta) {
+    idx = Math.min(Math.max(idx + delta, 0), slides.length - 1);
+    render();
+  }
+
+  function slideText(el) {
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ コピーしました';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  }
+
+  function copySlidePrompt() {
+    const content = slideText(slides[idx]);
+    const prompt = 'サークルアプリ開発の研修講義のスライドを見ています。\n\n'
+      + '【このページの内容】\n' + content + '\n\n'
+      + '【分からない点】\n（ここに具体的に何が分からないかを書いてください）\n\n'
+      + '上記を踏まえて、プログラミング未経験者にも分かるように、専門用語を避けて易しく説明してください。';
+    copyToClipboard(prompt, document.getElementById('copySlideBtn'));
+  }
+
+  function copyAllPrompt() {
+    const allText = Array.from(slides).map((s, i) => 'ページ' + (i + 1) + ': ' + slideText(s)).join('\n\n');
+    const prompt = '以下は「サークルアプリ開発 オンボーディング」というオンライン講義のスライド全体の内容です。\n\n'
+      + allText + '\n\n'
+      + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
+      + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
+    copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  render();
+</script>
+
+</body>
+</html>

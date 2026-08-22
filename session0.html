@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>第0回 キックオフ・利用体験会</title>
+<style>
+  :root {
+    --accent: #2f6f4f;
+    --bg: #fdfdfb;
+    --border: #ddd6c9;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg);
+    padding: 6vh 10vw;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active { display: flex; }
+  .slide.center { align-items: center; text-align: center; }
+
+  .kicker {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .time-badge {
+    background: #f0ece0;
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+  }
+  .slide h1 {
+    font-size: 3rem;
+    margin: 0 0 2rem;
+    border-bottom: 5px solid var(--accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+  }
+  .slide.center h1 { border-bottom: none; padding-bottom: 0; }
+  .slide p, .slide li {
+    font-size: 1.6rem;
+    line-height: 1.9;
+  }
+  .slide ul { padding-left: 1.6rem; }
+
+  .step-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    margin: 0.7rem 0;
+    font-size: 1.6rem;
+  }
+  .step-card .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    margin-right: 0.8rem;
+  }
+  .note {
+    background: #fff7ec;
+    border: 1px dashed #d8b56a;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    color: #6b5220;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+  a.link { color: var(--accent); word-break: break-all; }
+
+  /* ページ内に統合したナビゲーション（フローティングにしない） */
+  .slide-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3vw;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .slide-footer button {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+  }
+  .slide-footer button:disabled { color: #ccc; cursor: default; }
+  .slide-footer .fullscreen-btn { color: var(--muted); font-size: 1rem; }
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .gemini-btn {
+    background: #eef2fb !important;
+    color: #2b3a67 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  body { position: relative; }
+</style>
+</head>
+<body>
+
+  <div class="slide active center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">はじめに<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>事前アンケートのお願い</h1>
+    <p>講義を始める前に、まず下記のアンケートに答えてください。<br>普段どんなツールに触れているか・プログラミングへの馴染み具合を教えてもらうためのものです。</p>
+    <p style="margin-top:1.5rem;">
+      <a class="link" href="https://docs.google.com/forms/d/e/1FAIpQLSdhu6gPgrC2ati7JCh4wXHtyy797bVsowJidA8M6nLKOV5tzQ/viewform?usp=header" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSdhu6gPgrC2ati7JCh4wXHtyy797bVsowJidA8M6nLKOV5tzQ/viewform</a>
+    </p>
+    <div class="note">正直に答えてもらえればOKです。今後の説明のペース・難易度を合わせるために使います。</div>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第0回<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>キックオフ・利用体験会</h1>
+    <p>コードは一切見ません。まずは「使う人」として体験してみましょう。</p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日のゴール<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>今日やること</h1>
+    <ul>
+      <li>このアプリが何のために作られたのかを知る</li>
+      <li>実際に自分で部員登録フォームを入力してみる</li>
+      <li>入力したデータが裏側でどう扱われているかを見る</li>
+      <li>これから一緒に進めていく開発の全体像をざっくり知る</li>
+    </ul>
+    <div class="note">コードやGitの話は次回（第1回）から。今日は「利用者目線」だけでOKです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">背景<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>なぜこのアプリを作っているのか</h1>
+    <p>
+      これまで先代の佐々木さんのエクセルマクロでの書類作成を利用した名簿管理と書類作成をしてきましたが、引継ぎの過程で不備が生じてきて、開発のし直しが必要な状況です。
+      
+    </p>
+    <p>
+      このアプリは、サークルの部員情報、共装情報等を含めたデータの一元管理と作業の簡易化を目指しています。
+      願いとしては、常に皆さんが、自分の手で、今必要なアプリケーションを維持していっていただきたいです。
+    </p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践<span class="time-badge">⏱ 目安10分</span></p>
+    <h1>実際に触ってみよう</h1>
+    <div class="step-card"><span class="num">1</span>下のURLをブラウザで開く</div>
+    <div class="step-card"><span class="num">2</span>「新規登録」を選ぶ</div>
+    <div class="step-card"><span class="num">3</span>基本情報 → 所属情報 → 連絡先 → 緊急連絡先、の順に入力していく</div>
+    <div class="step-card"><span class="num">4</span>確認画面が出たら内容を見て送信する</div>
+    <p style="margin-top:1.5rem; font-size:1.3rem;">
+      URL: <a class="link" href="https://circle-papers-for-huwa.onrender.com" target="_blank">https://circle-papers-for-huwa.onrender.com</a>
+    </p>
+    <div class="note">練習用なので、内容は仮のものでOKです（本名でなくても構いません）。<br>起動に時間がかかります。2分ほど見ていただけますとひらけると思います。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">裏側を見てみる<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>送信すると何が起きているか</h1>
+    <p>今入力してもらった内容は、Googleスプレッドシートに自動で1行追加されています。</p>
+    <ul>
+      <li>今の版（V1）は Flask というPythonの仕組みで動いている</li>
+      <li>送信されたデータは gspread という仕組みでスプレッドシートに書き込まれる</li>
+      <li>この画面共有で、実際に増えた行を一緒に見てみましょう</li>
+    </ul>
+    <div class="note">スプレッドシートへのアクセス権はまだ渡していないので、今日は画面共有で確認します。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">これから<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>今後の展望（ざっくり）</h1>
+    <ul>
+      <li>今の版（Flask + Render）は最初の一歩として作ったもの</li>
+      <li>次のフェーズとして、GAS（Google Apps Script）＋ React という構成に作り替えていく計画</li>
+      <li>無料で恒久的に運用でき、GitHubで公開して一緒に開発を進められるようにするのが狙い</li>
+    </ul>
+    <p style="font-size:1.3rem;">詳しくは要件定義書・移行設計書を今後の回で一緒に読んでいきます。</p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">次回予告<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>第1回：Git/GitHub基礎会</h1>
+    <ul>
+      <li>GitHubアカウントを作る</li>
+      <li>このプロジェクトのGitHub Organizationに招待する</li>
+      <li>実際に小さなPR（自己紹介ファイルの追加）を1本出してみる</li>
+    </ul>
+    <div class="note">事前準備：もしよければ、ノートPCとGoogleアカウントを用意しておいてください。</div>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">まとめ<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>おつかれさまでした！</h1>
+    <p>質問があればなんでもどうぞ。次回もよろしくお願いします。</p>
+  </div>
+
+<div class="slide-footer">
+  <button id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="footer-center">
+    <span id="count"></span>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
+  </div>
+  <button id="nextBtn" onclick="go(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+    document.getElementById('copyAllBtn').style.display = idx === 0 ? 'inline-block' : 'none';
+  }
+
+  function go(delta) {
+    idx = Math.min(Math.max(idx + delta, 0), slides.length - 1);
+    render();
+  }
+
+  function slideText(el) {
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ コピーしました';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  }
+
+  function copySlidePrompt() {
+    const content = slideText(slides[idx]);
+    const prompt = 'サークルアプリ開発の研修講義のスライドを見ています。\n\n'
+      + '【このページの内容】\n' + content + '\n\n'
+      + '【分からない点】\n（ここに具体的に何が分からないかを書いてください）\n\n'
+      + '上記を踏まえて、プログラミング未経験者にも分かるように、専門用語を避けて易しく説明してください。';
+    copyToClipboard(prompt, document.getElementById('copySlideBtn'));
+  }
+
+  function copyAllPrompt() {
+    const allText = Array.from(slides).map((s, i) => 'ページ' + (i + 1) + ': ' + slideText(s)).join('\n\n');
+    const prompt = '以下は「サークルアプリ開発 オンボーディング」というオンライン講義のスライド全体の内容です。\n\n'
+      + allText + '\n\n'
+      + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
+      + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
+    copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  render();
+</script>
+
+</body>
+</html>

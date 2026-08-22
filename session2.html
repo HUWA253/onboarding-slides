@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>第2回 開発環境構築会</title>
+<style>
+  :root {
+    --accent: #2f6f4f;
+    --bg: #fdfdfb;
+    --border: #ddd6c9;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    background: var(--bg);
+    padding: 6vh 10vw;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide.active { display: flex; }
+  .slide.center { align-items: center; text-align: center; }
+
+  .kicker {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .time-badge {
+    background: #f0ece0;
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+  }
+  .slide h1 {
+    font-size: 3rem;
+    margin: 0 0 2rem;
+    border-bottom: 5px solid var(--accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+  }
+  .slide.center h1 { border-bottom: none; padding-bottom: 0; }
+  .slide p, .slide li {
+    font-size: 1.6rem;
+    line-height: 1.9;
+  }
+  .slide ul { padding-left: 1.6rem; }
+
+  .step-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    margin: 0.7rem 0;
+    font-size: 1.4rem;
+  }
+  .step-card .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    margin-right: 0.8rem;
+  }
+  .cmd {
+    display: block;
+    background: #2b2b2b;
+    color: #e8f5e9;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 1.3rem;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    margin: 0.8rem 0 0;
+  }
+  .note {
+    background: #fff7ec;
+    border: 1px dashed #d8b56a;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    color: #6b5220;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+  .term-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+  }
+  .term-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+  }
+  .term-card .term {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .term-card .desc {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.6;
+  }
+  code {
+    background: #f0ece0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  a.link { color: var(--accent); word-break: break-all; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3vw;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .slide-footer button {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+  }
+  .slide-footer button:disabled { color: #ccc; cursor: default; }
+  .slide-footer .fullscreen-btn { color: var(--muted); font-size: 1rem; }
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .gemini-btn {
+    background: #eef2fb !important;
+    color: #2b3a67 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  body { position: relative; }
+</style>
+</head>
+<body>
+
+  <div class="slide active center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第2回<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>開発環境構築会</h1>
+    <p>今日は自分のPCで、実際に開発中のアプリ画面を表示させるところまでやります。</p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日のゴール<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>今日やること</h1>
+    <ul>
+      <li>Node.jsが入っているか確認する</li>
+      <li>VSCode（コードエディタ）をインストールする</li>
+      <li>プロジェクトのコードを自分のPCに持ってくる（clone）</li>
+      <li>自分専用のGoogleアプリスクリプト（GAS）プロジェクトを作る</li>
+      <li>自分のPCの画面にアプリが表示されるのを確認する</li>
+    </ul>
+    <div class="note">今日のゴールは「自分のPCで画面が出た！」を体験することです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日使う用語<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>覚えておきたい言葉</h1>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">Node.js / npm</div>
+        <div class="desc">JavaScriptをPC上で動かす仕組みと、そのための道具箱（ライブラリ）を管理するツール</div>
+      </div>
+      <div class="term-card">
+        <div class="term">clone（クローン）</div>
+        <div class="desc">GitHub上のリポジトリを、自分のPCにまるごとコピーしてくること</div>
+      </div>
+      <div class="term-card">
+        <div class="term">clasp（クラスプ）</div>
+        <div class="desc">自分のPCとGoogleアプリスクリプト(GAS)をつなぐための専用ツール</div>
+      </div>
+      <div class="term-card">
+        <div class="term">ローカルサーバー</div>
+        <div class="desc">自分のPCの中だけで動く、お試し用のWebサーバー。ここに向けてブラウザでアクセスして画面を確認する</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践1<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>Node.jsが入っているか確認</h1>
+    <p>ターミナル（黒い画面）を開いて、以下を打ってみてください。</p>
+    <code class="cmd">node --version</code>
+    <code class="cmd">npm --version</code>
+    <div class="note">バージョン番号が表示されればOK。「command not found」のようなエラーが出たら、その場で入れ方を確認しましょう。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践2<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>VSCodeをインストールする</h1>
+    <div class="step-card"><span class="num">1</span><a class="link" href="https://code.visualstudio.com/" target="_blank">https://code.visualstudio.com/</a> からダウンロード</div>
+    <div class="step-card"><span class="num">2</span>インストーラーを実行。基本は全部「Next」でOK</div>
+    <div class="step-card"><span class="num">3</span>起動して、フォルダを開けることを確認する</div>
+    <div class="note">これが今後コードを読み書きするための「本物のエディタ」です。メモ帳とはここでお別れです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践3<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>Gitをインストールする</h1>
+    <div class="step-card"><span class="num">1</span><a class="link" href="https://git-scm.com/download/win" target="_blank">https://git-scm.com/download/win</a> を開き、インストーラーをダウンロード</div>
+    <div class="step-card"><span class="num">2</span>インストーラーを実行。基本は全部「Next」でOK</div>
+    <div class="step-card"><span class="num">3</span>PowerShell（またはVSCode内のターミナル）で確認</div>
+    <code class="cmd">git --version</code>
+    <div class="step-card"><span class="num">4</span>初回だけ、自分の名前とメールアドレスを設定</div>
+    <code class="cmd">git config --global user.name "自分の名前"</code>
+    <code class="cmd">git config --global user.email "自分のメールアドレス"</code>
+    <div class="note">前回はブラウザだけでPRを出しましたが、実際のコードを触うにはローカルにもGitが必要です。WSLもUbuntuも不要です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践4<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>プロジェクトをcloneする</h1>
+    <div class="step-card"><span class="num">1</span>作業したいフォルダに移動する（例: <code>cd ~/projects</code>）</div>
+    <div class="step-card"><span class="num">2</span>以下のコマンドでリポジトリを持ってくる</div>
+    <code class="cmd">git clone （リポジトリのURL）</code>
+    <div class="step-card"><span class="num">3</span>できたフォルダをVSCodeで開く</div>
+    <code class="cmd">cd （フォルダ名）</code>
+    <code class="cmd">code .</code>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践5<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>必要な道具箱をインストール</h1>
+    <p>プロジェクトが使っているライブラリ一式をまとめて入れます。VSCode内のターミナル（メニューの「Terminal」→「New Terminal」）から実行できます。</p>
+    <code class="cmd">npm install</code>
+    <div class="note">少し時間がかかります。エラーが大量に出なければ大丈夫です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践6<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>自分のGoogleアカウントでログイン</h1>
+    <code class="cmd">npx clasp login</code>
+    <ul style="margin-top:1rem;">
+      <li>ブラウザが開くので、自分のGoogleアカウントでログイン</li>
+      <li>権限の許可を求められたら「許可」を選ぶ</li>
+    </ul>
+    <div class="note">ここで使うのは自分専用の開発環境用アカウントです。サークル共有アカウントではありません。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践7<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>自分専用のGASプロジェクトを作る</h1>
+    <code class="cmd">cd src</code>
+    <code class="cmd">npx clasp create --type webapp --title "自分の名前_dev"</code>
+    <div class="note">これで自分だけが触れる、練習用のGoogleアプリスクリプトのプロジェクトが1つできました。他の人のものとは完全に別物です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践8（メイン）<span class="time-badge">⏱ 目安10分</span></p>
+    <h1>自分のPCで画面を表示する</h1>
+    <code class="cmd">cd ..</code>
+    <code class="cmd">npm run dev</code>
+    <p style="margin-top:1rem;">表示されたURL（<code>http://localhost:5173</code> など）をブラウザで開いてください。</p>
+    <div class="note">アプリの画面が表示されたら今日は成功です！コードを保存すると、この画面も自動で変わるようになっています。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">うまくいかない時は<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>詰まったら</h1>
+    <ul>
+      <li>エラーメッセージが出たら、まずそのまま読んでみる（意外と日本語や分かる単語が混ざっています）</li>
+      <li>フッターの「🤖 詰まったらコピー」で、今のページの内容＋自分の状況をGeminiに聞いてみる</li>
+      <li>それでも分からなければ遠慮なく声をかけてください</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">次回予告<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>第3回：コードリーディング＆最初のタスク会</h1>
+    <ul>
+      <li>設計書と実際のコードを一緒に読む</li>
+      <li>小さめのタスクを1つ、一緒に手を動かして直してみる</li>
+    </ul>
+    <div class="note">事前準備：今日構築した開発環境がそのまま使えます。</div>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">まとめ<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>おつかれさまでした！</h1>
+    <p>自分のPCで画面が出せたら大成功です。質問があればどうぞ。</p>
+  </div>
+
+<div class="slide-footer">
+  <button id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="footer-center">
+    <span id="count"></span>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
+  </div>
+  <button id="nextBtn" onclick="go(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+    document.getElementById('copyAllBtn').style.display = idx === 0 ? 'inline-block' : 'none';
+  }
+
+  function go(delta) {
+    idx = Math.min(Math.max(idx + delta, 0), slides.length - 1);
+    render();
+  }
+
+  function slideText(el) {
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ コピーしました';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  }
+
+  function copySlidePrompt() {
+    const content = slideText(slides[idx]);
+    const prompt = 'サークルアプリ開発の研修講義のスライドを見ています。\n\n'
+      + '【このページの内容】\n' + content + '\n\n'
+      + '【分からない点】\n（ここに具体的に何が分からないかを書いてください）\n\n'
+      + '上記を踏まえて、プログラミング未経験者にも分かるように、専門用語を避けて易しく説明してください。';
+    copyToClipboard(prompt, document.getElementById('copySlideBtn'));
+  }
+
+  function copyAllPrompt() {
+    const allText = Array.from(slides).map((s, i) => 'ページ' + (i + 1) + ': ' + slideText(s)).join('\n\n');
+    const prompt = '以下は「サークルアプリ開発 オンボーディング」というオンライン講義のスライド全体の内容です。\n\n'
+      + allText + '\n\n'
+      + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
+      + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
+    copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
