@@ -133,6 +133,53 @@
   }
 
   body { position: relative; }
+
+  .tutorial-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 500;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 9vh;
+  }
+  .tutorial-overlay.active { display: flex; }
+  .tutorial-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.3rem 1.7rem;
+    max-width: 90vw;
+    width: 480px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    text-align: center;
+  }
+  .tutorial-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin: 0 0 1.1rem;
+    color: var(--text);
+  }
+  .tutorial-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .tutorial-controls button {
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .tutorial-controls .skip-btn { background: #eee; color: #555; }
+  .tutorial-controls .next-btn { background: var(--accent); color: #fff; }
+  .tutorial-highlight {
+    position: relative;
+    z-index: 501;
+    box-shadow: 0 0 0 4px #ffd166, 0 0 20px 5px rgba(255,209,102,0.85);
+    border-radius: 999px;
+  }
 </style>
 </head>
 <body>
@@ -145,9 +192,6 @@
       <a class="link" href="https://docs.google.com/forms/d/e/1FAIpQLSdhu6gPgrC2ati7JCh4wXHtyy797bVsowJidA8M6nLKOV5tzQ/viewform?usp=header" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSdhu6gPgrC2ati7JCh4wXHtyy797bVsowJidA8M6nLKOV5tzQ/viewform</a>
     </p>
     <div class="note">正直に答えてもらえればOKです。今後の説明のペース・難易度を合わせるために使います。</div>
-    <div class="note" style="background:#eef2fb;border-color:#33509c;color:#2b3a67;">
-      画面下の🧭ボタンを押すと、この講義全体の内容がコピーされます。まず新しいGeminiのチャットに貼り付けてください。分からないページが出てきたら、そのページで🤖ボタンを押して、同じチャットの続きに貼り付けて質問できます。
-    </div>
   </div>
 
   <div class="slide center">
@@ -243,6 +287,16 @@
   <button id="nextBtn" onclick="go(1)">▶</button>
 </div>
 
+<div class="tutorial-overlay" id="tutorialOverlay">
+  <div class="tutorial-box">
+    <p class="tutorial-text" id="tutorialText"></p>
+    <div class="tutorial-controls">
+      <button class="skip-btn" onclick="skipTutorial()">スキップ</button>
+      <button class="next-btn" id="tutorialNextBtn" onclick="nextTutorialStep()">次へ</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const slides = document.querySelectorAll('.slide');
   let idx = 0;
@@ -305,6 +359,65 @@
   });
 
   render();
+
+  const tutorialSteps = [
+    {
+      targets: ['prevBtn', 'nextBtn'],
+      text: '画面下の◀ ▶ボタンでページを送れます。キーボードの矢印キーでも移動できます。'
+    },
+    {
+      targets: ['copyAllBtn', 'copySlideBtn'],
+      text: '🧭ボタンで、この講義全体の内容をGeminiに伝えられます。🤖ボタンは、詰まったページの内容をコピーしてGeminiに質問する時に使います。'
+    }
+  ];
+  let tutorialStep = 0;
+
+  function clearTutorialHighlight() {
+    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+  }
+
+  function showTutorialStep() {
+    clearTutorialHighlight();
+    const step = tutorialSteps[tutorialStep];
+    step.targets.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('tutorial-highlight');
+    });
+    document.getElementById('tutorialText').textContent = step.text;
+    document.getElementById('tutorialNextBtn').textContent =
+      tutorialStep === tutorialSteps.length - 1 ? 'はじめる' : '次へ';
+  }
+
+  function nextTutorialStep() {
+    tutorialStep++;
+    if (tutorialStep >= tutorialSteps.length) {
+      endTutorial();
+    } else {
+      showTutorialStep();
+    }
+  }
+
+  function skipTutorial() {
+    endTutorial();
+  }
+
+  function endTutorial() {
+    clearTutorialHighlight();
+    document.getElementById('tutorialOverlay').classList.remove('active');
+    try { localStorage.setItem('circleApp_tutorialSeen', '1'); } catch (e) {}
+  }
+
+  function startTutorialIfNeeded() {
+    let seen = false;
+    try { seen = localStorage.getItem('circleApp_tutorialSeen') === '1'; } catch (e) {}
+    if (!seen) {
+      tutorialStep = 0;
+      showTutorialStep();
+      document.getElementById('tutorialOverlay').classList.add('active');
+    }
+  }
+
+  startTutorialIfNeeded();
 </script>
 
 </body>
