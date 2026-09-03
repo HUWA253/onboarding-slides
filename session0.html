@@ -177,11 +177,25 @@
   }
   .tutorial-controls .skip-btn { background: #eee; color: #555; }
   .tutorial-controls .next-btn { background: var(--accent); color: #fff; }
-  .tutorial-highlight {
-    position: relative;
+  .tutorial-spotlight {
+    position: fixed;
     z-index: 501;
     box-shadow: 0 0 0 4px #ffd166, 0 0 20px 5px rgba(255,209,102,0.85);
     border-radius: 999px;
+    pointer-events: none;
+  }
+
+  @media (max-width: 600px) {
+    .slide { padding: 3vh 6vw 2vh; }
+    .slide h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .slide p, .slide li { font-size: 1.05rem; line-height: 1.6; }
+    .kicker { font-size: 0.9rem; }
+    .time-badge { font-size: 0.75rem; padding: 0.15rem 0.6rem; }
+    .step-card { font-size: 1.05rem; padding: 0.8rem 1rem; }
+    .note { font-size: 0.95rem; padding: 0.8rem 1rem; }
+    .slide-footer { font-size: 0.85rem; }
+    .tutorial-text { font-size: 0.95rem; }
+    .tutorial-box { padding: 1rem 1.2rem; }
   }
 </style>
 </head>
@@ -286,6 +300,7 @@
 </div>
 
 <div class="tutorial-overlay" id="tutorialOverlay">
+  <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
   <div class="tutorial-box">
     <p class="tutorial-text" id="tutorialText"></p>
     <div class="tutorial-controls">
@@ -370,17 +385,28 @@
   ];
   let tutorialStep = 0;
 
-  function clearTutorialHighlight() {
-    document.querySelectorAll('.tutorial-highlight').forEach(el => el.classList.remove('tutorial-highlight'));
+  function positionSpotlight(targetIds) {
+    const spot = document.getElementById('tutorialSpotlight');
+    const els = targetIds.map(id => document.getElementById(id)).filter(Boolean);
+    if (els.length === 0) {
+      spot.style.display = 'none';
+      return;
+    }
+    const rects = els.map(el => el.getBoundingClientRect());
+    const left = Math.min(...rects.map(r => r.left)) - 8;
+    const top = Math.min(...rects.map(r => r.top)) - 6;
+    const right = Math.max(...rects.map(r => r.right)) + 8;
+    const bottom = Math.max(...rects.map(r => r.bottom)) + 6;
+    spot.style.display = 'block';
+    spot.style.left = left + 'px';
+    spot.style.top = top + 'px';
+    spot.style.width = (right - left) + 'px';
+    spot.style.height = (bottom - top) + 'px';
   }
 
   function showTutorialStep() {
-    clearTutorialHighlight();
     const step = tutorialSteps[tutorialStep];
-    step.targets.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('tutorial-highlight');
-    });
+    positionSpotlight(step.targets);
     document.getElementById('tutorialText').textContent = step.text;
     document.getElementById('tutorialNextBtn').textContent =
       tutorialStep === tutorialSteps.length - 1 ? 'はじめる' : '次へ';
@@ -400,7 +426,6 @@
   }
 
   function endTutorial() {
-    clearTutorialHighlight();
     document.getElementById('tutorialOverlay').classList.remove('active');
     try { localStorage.setItem('circleApp_tutorialSeen', '1'); } catch (e) {}
   }
