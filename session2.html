@@ -30,6 +30,7 @@
     flex-direction: column;
     justify-content: center;
     overflow-y: auto;
+    overflow-x: auto;
   }
   .slide.active { display: flex; }
   .slide.center { align-items: center; text-align: center; }
@@ -135,6 +136,23 @@
   }
   a.link { color: var(--accent); word-break: break-all; }
 
+  details.more {
+    margin-top: 1.2rem;
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.3rem;
+  }
+  details.more summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.2rem;
+  }
+  details.more[open] summary { margin-bottom: 0.8rem; }
+  details.more p { font-size: 1.15rem; line-height: 1.7; }
+  details.more ol { font-size: 1.15rem; line-height: 1.7; padding-left: 1.4rem; }
+
   .slide-footer {
     position: absolute;
     bottom: 0;
@@ -185,6 +203,8 @@
     .term-card .term { font-size: 1.1rem; }
     .term-card .desc { font-size: 0.95rem; }
     .cmd { font-size: 1rem; }
+    details.more summary { font-size: 1.05rem; }
+    details.more p, details.more ol { font-size: 1rem; }
   }
 </style>
 </head>
@@ -232,6 +252,16 @@
         <div class="desc">自分のPCとGoogleアプリスクリプト(GAS)をつなぐための専用ツール。今回はDockerの中から使います</div>
       </div>
     </div>
+    <details class="more">
+      <summary>もっと詳しく：Dockerの箱の中身って何？</summary>
+      <p>「Dockerという名前の道具箱（コンテナ）」の中には、主に次の3つの道具が最初からセットされて入っています。</p>
+      <ol>
+        <li><strong>Node.js と npm</strong>：このアプリを動かすための「基本エンジン」と、開発に使う色々な部品を取り寄せる「便利なカタログ」</li>
+        <li><strong>clasp</strong>：自分のパソコンからGoogleアプリスクリプト(GAS)に接続するための「専用のリモコン」</li>
+        <li><strong>アプリの画面をブラウザに映し出すためのツール</strong>：道具箱の中で「画面をブラウザに表示するための小さな案内所（Webサーバー）」が動いている</li>
+      </ol>
+      <p>つまり「アプリのエンジン」＋「Googleと通信するリモコン」＋「画面を映す案内所」が全部セットになった、このアプリ開発専用の「全部入りお道具箱」が、今回使っているコンテナの正体です。</p>
+    </details>
   </div>
 
   <div class="slide">
