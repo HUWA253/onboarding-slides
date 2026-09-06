@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第4回 PR・レビュー実践会</title>
+<style>
+  :root {
+    --accent: #2f6f4f;
+    --bg: #fdfdfb;
+    --border: #ddd6c9;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: calc(100vh - 6vh);
+    background: var(--bg);
+    padding: 4vh 10vw 2vh;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.center { align-items: center; text-align: center; }
+
+  .kicker {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .time-badge {
+    background: #f0ece0;
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+  }
+  .slide h1 {
+    font-size: 3rem;
+    margin: 0 0 2rem;
+    border-bottom: 5px solid var(--accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+  }
+  .slide.center h1 { border-bottom: none; padding-bottom: 0; }
+  .slide p, .slide li {
+    font-size: 1.6rem;
+    line-height: 1.9;
+  }
+  .slide ul { padding-left: 1.6rem; }
+
+  .step-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    margin: 0.7rem 0;
+    font-size: 1.4rem;
+  }
+  .step-card .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    margin-right: 0.8rem;
+  }
+  .cmd {
+    display: block;
+    background: #2b2b2b;
+    color: #e8f5e9;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 1.3rem;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    margin: 0.8rem 0 0;
+    white-space: pre-wrap;
+  }
+  .note {
+    background: #fff7ec;
+    border: 1px dashed #d8b56a;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    color: #6b5220;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+  .term-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+  }
+  .term-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+  }
+  .term-card .term {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .term-card .desc {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.6;
+  }
+  code {
+    background: #f0ece0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  a.link { color: var(--accent); word-break: break-all; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3vw;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .slide-footer button {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+  }
+  .slide-footer button:disabled { color: #ccc; cursor: default; }
+  .slide-footer .fullscreen-btn { color: var(--muted); font-size: 1rem; }
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .gemini-btn {
+    background: #eef2fb !important;
+    color: #2b3a67 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  body { position: relative; }
+
+  @media (max-width: 600px) {
+    .slide { padding: 3vh 6vw 2vh; }
+    .slide h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    .slide p, .slide li { font-size: 1.05rem; line-height: 1.6; }
+    .kicker { font-size: 0.9rem; }
+    .time-badge { font-size: 0.75rem; padding: 0.15rem 0.6rem; }
+    .step-card { font-size: 1.05rem; padding: 0.8rem 1rem; }
+    .note { font-size: 0.95rem; padding: 0.8rem 1rem; }
+    .slide-footer { font-size: 0.85rem; }
+    .term-card .term { font-size: 1.1rem; }
+    .term-card .desc { font-size: 0.95rem; }
+    .cmd { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="slide active center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第4回<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>PR・レビュー実践会</h1>
+    <p>今日は前回コミットした変更を実際にpushして、PRを出して、お互いにレビューし合うところまでやります。</p>
+    <div class="note" style="background:#eef2fb;border-color:#33509c;color:#2b3a67;">
+      画面下の🧭ボタンを押すと、この講義全体の内容がコピーされます。まず新しいGeminiのチャットに貼り付けてください。分からないページが出てきたら、そのページで🤖ボタンを押して、同じチャットの続きに貼り付けて質問できます。
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日のゴール<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>今日やること</h1>
+    <ul>
+      <li>前回コミットした変更を、自分の作業ブランチとしてpushする</li>
+      <li>GitHub上で実際にPRを出す</li>
+      <li>お互いのPRを読んで、コメントを付け合う</li>
+      <li>指摘を直して、マージまで体験する</li>
+    </ul>
+    <div class="note">今日のゴールは「自分の変更が人に見てもらえて、mainに取り込まれた」を体験することです。研修はこれで最後です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日使う用語<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>覚えておきたい言葉</h1>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">PR（プルリクエスト）</div>
+        <div class="desc">「このブランチの変更をmainに取り込んでください」というお願い。第1回はブラウザだけで出しましたが、今回は自分のPCで作った変更を出します</div>
+      </div>
+      <div class="term-card">
+        <div class="term">レビュー</div>
+        <div class="desc">他の人が出したPRの中身を読んで、コメントを付けたり「これで良さそう」を伝えたりすること</div>
+      </div>
+      <div class="term-card">
+        <div class="term">Approve（承認）</div>
+        <div class="desc">レビューした人が「この内容でmainに入れて良い」と意思表示するボタン</div>
+      </div>
+      <div class="term-card">
+        <div class="term">マージ</div>
+        <div class="desc">PRの内容を実際にmainに取り込む操作。Approveされたら押せるようになる</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践1<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>作業ブランチを作る</h1>
+    <p>前回はmainのまま直接コミットしていたので、まず自分専用のブランチを切ります。</p>
+    <code class="cmd">git checkout -b add-自分の名前</code>
+    <div class="note">これで「今いる場所」に自分専用の名前を付けられました。中身（コミット）は前回のままで大丈夫です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践2<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>ブランチをpushする</h1>
+    <code class="cmd">git push -u origin add-自分の名前</code>
+    <div class="note"><code>-u</code>は「このブランチはGitHub上のこの名前と対応してますよ」と覚えさせるおまじないです。次回以降は<code>git push</code>だけで済むようになります。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践3<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>PRを出す</h1>
+    <div class="step-card"><span class="num">1</span>pushすると、ターミナルにPR作成用のURLが表示されるので開く（出てこなければGitHub上のリポジトリページを開く）</div>
+    <div class="step-card"><span class="num">2</span>「Compare & pull request」ボタンを押す</div>
+    <div class="step-card"><span class="num">3</span>タイトルと、何をやったかの説明を書く</div>
+    <div class="step-card"><span class="num">4</span>「Create pull request」</div>
+    <div class="note">第1回はブラウザだけで完結するPRでしたが、今日のは自分のPCで書いたコードが載っています。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践4（メイン）<span class="time-badge">⏱ 目安15分</span></p>
+    <h1>お互いにレビューする</h1>
+    <div class="step-card"><span class="num">1</span>相手のPRのURLを教えてもらい、「Files changed」タブを開く</div>
+    <div class="step-card"><span class="num">2</span>気になった行にカーソルを合わせると出る「+」ボタンでコメントを付ける</div>
+    <div class="step-card"><span class="num">3</span>読んでみて問題無さそうなら、右上の「Review changes」→「Approve」</div>
+    <div class="note">最初は「なぜこう書いたの？」くらいの軽い質問でOKです。分からない部分を聞くこと自体がレビューの練習になります。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践5<span class="time-badge">⏱ 目安10分</span></p>
+    <h1>指摘を直して再push</h1>
+    <p>コメントをもらったら、ローカルで直して同じブランチにコミット・pushしてみましょう。</p>
+    <code class="cmd">git add （直したファイル）</code>
+    <code class="cmd">git commit -m "レビュー対応"</code>
+    <code class="cmd">git push</code>
+    <div class="note">同じブランチにpushするだけで、開いているPRに自動で追加されます。PRを作り直す必要はありません。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">実践6<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>マージする</h1>
+    <div class="step-card"><span class="num">1</span>Approveされているのを確認する</div>
+    <div class="step-card"><span class="num">2</span>PRページ下部の「Merge pull request」を押す</div>
+    <div class="step-card"><span class="num">3</span>自分のブランチは役目を終えたので「Delete branch」で消してOK</div>
+    <div class="note">これで自分の変更がmainに入りました。ここまでが実際の開発の一連の流れです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">うまくいかない時は<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>詰まったら</h1>
+    <ul>
+      <li>エラーメッセージが出たら、まずそのまま読んでみる（意外と日本語や分かる単語が混ざっています）</li>
+      <li>フッターの「🤖 詰まったらコピー」で、今のページの内容＋自分の状況をGeminiに聞いてみる</li>
+      <li>それでも分からなければ遠慮なく声をかけてください</li>
+    </ul>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">まとめ<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>おつかれさまでした！</h1>
+    <p>これで研修は全5回すべて終了です。clone・環境構築・コード読み・修正・PR・レビューまで、一通りの開発の流れを自分の手で体験してもらいました。</p>
+    <div class="note" style="background:#eef2fb;border-color:#33509c;color:#2b3a67;">
+      次に「サークルアプリ要件定義書」をお渡しします。ここからが本格的な開発の始まりです。分からないことがあれば、これまでどおり遠慮なく聞いてください。
+    </div>
+  </div>
+
+<div class="slide-footer">
+  <button id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="footer-center">
+    <span id="count"></span>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
+  </div>
+  <button id="nextBtn" onclick="go(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+    document.getElementById('copyAllBtn').style.display = idx === 0 ? 'inline-block' : 'none';
+  }
+
+  function go(delta) {
+    idx = Math.min(Math.max(idx + delta, 0), slides.length - 1);
+    render();
+  }
+
+  function slideText(el) {
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ コピーしました';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  }
+
+  function copySlidePrompt() {
+    const content = slideText(slides[idx]);
+    const prompt = 'サークルアプリ開発の研修講義のスライドを見ています。\n\n'
+      + '【このページの内容】\n' + content + '\n\n'
+      + '【分からない点】\n（ここに具体的に何が分からないかを書いてください）\n\n'
+      + '上記を踏まえて、プログラミング未経験者にも分かるように、専門用語を避けて易しく説明してください。';
+    copyToClipboard(prompt, document.getElementById('copySlideBtn'));
+  }
+
+  function copyAllPrompt() {
+    const allText = Array.from(slides).map((s, i) => 'ページ' + (i + 1) + ': ' + slideText(s)).join('\n\n');
+    const prompt = '以下は「サークルアプリ開発 オンボーディング」というオンライン講義のスライド全体の内容です。\n\n'
+      + allText + '\n\n'
+      + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
+      + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
+    copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  render();
+</script>
+
+</body>
+</html>
