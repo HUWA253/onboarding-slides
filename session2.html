@@ -256,11 +256,16 @@
       <summary>もっと詳しく：Dockerの箱の中身って何？</summary>
       <p>「Dockerという名前の道具箱（コンテナ）」の中には、主に次の3つの道具が最初からセットされて入っています。</p>
       <ol>
-        <li><strong>Node.js と npm</strong>：このアプリを動かすための「基本エンジン」と、開発に使う色々な部品を取り寄せる「便利なカタログ」</li>
-        <li><strong>clasp</strong>：自分のパソコンからGoogleアプリスクリプト(GAS)に接続するための「専用のリモコン」</li>
-        <li><strong>アプリの画面をブラウザに映し出すためのツール</strong>：道具箱の中で「画面をブラウザに表示するための小さな案内所（Webサーバー）」が動いている</li>
+        <li><strong>Node.js と npm</strong>：このアプリを動かすための「基本エンジン」と、開発に使う色々な部品（ライブラリ）を取り寄せる「便利なカタログ」</li>
+        <li><strong>clasp</strong>：自分のパソコンからGoogleアプリスクリプト(GAS)に接続するための「専用のリモコン」。Googleが公式に配っているツールで、npmのカタログから取り寄せて使っています</li>
+        <li><strong>Vite（ヴィート）</strong>：画面をブラウザに表示するための小さな案内所（Webサーバー）。これもnpmのカタログにある部品の1つです</li>
       </ol>
-      <p>つまり「アプリのエンジン」＋「Googleと通信するリモコン」＋「画面を映す案内所」が全部セットになった、このアプリ開発専用の「全部入りお道具箱」が、今回使っているコンテナの正体です。</p>
+      <p>つまり「アプリのエンジン（Node.js/npm）」＋「Googleと通信するリモコン（clasp）」＋「画面を映す案内所（Vite）」が全部セットになった、このアプリ開発専用の「全部入りお道具箱」が、今回使っているコンテナの正体です。ちなみにVite・claspはどちらも「npmのカタログにある部品」で、Docker自身が特別に作ったものではありません。Dockerは、それらを取り寄せて動かす「箱」を提供しているだけです。</p>
+    </details>
+    <details class="more">
+      <summary>もっと詳しく：なんでDockerを使わないといけないの？</summary>
+      <p>Dockerを使わない場合、参加する人がそれぞれ自分のPCにNode.jsやnpmを個別にインストールする必要があります。バージョンが人によって微妙に違うと「私のPCでは動くのに、あなたのPCでは動かない」という事故が起きやすくなります。</p>
+      <p>Dockerは「動かす環境」を丸ごと1つの箱にして配ってくれる仕組みです。誰のPCで動かしても中身は完全に同じになるので、この事故を防げます。今回Dockerを使っているのは、まさに「みんなの環境を揃える」ためです。</p>
     </details>
   </div>
 
@@ -316,7 +321,7 @@
     <div class="step-card"><span class="num">1</span>画面下部の「PORTS」タブを開く</div>
     <div class="step-card"><span class="num">2</span>5173番のポートの行にある地球儀アイコンをクリック</div>
     <div class="step-card"><span class="num">3</span>新しいタブでアプリの画面が開く</div>
-    <div class="note">URLは<code>localhost</code>ではなく<code>...app.github.dev</code>という形になりますが、動きは同じです。表示できたら今日は成功、このまま次回予告のページまで進んでください。</div>
+    <div class="note">URLは<code>localhost</code>ではなく<code>...app.github.dev</code>という形になりますが、動きは同じです。表示できたら今日は成功、このまま次のページ（任意）に進んでください。</div>
   </div>
 
   <div class="slide">
@@ -329,6 +334,11 @@
     <code class="cmd">docker --version</code>
     <code class="cmd">docker compose version</code>
     <div class="note">今回はNode.jsやnpmを自分のPCに直接インストールしません。Dockerさえ入っていれば、道具箱の中身は全部お任せできます。</div>
+    <details class="more">
+      <summary>もっと詳しく：docker と docker compose の違いは？</summary>
+      <p><code>docker</code>は「コンテナ（箱）を1つ動かす」ための基本エンジン本体です。<code>docker --version</code>はこのエンジン自体のバージョン確認です。</p>
+      <p><code>docker compose</code>は、その上に乗っている追加ツールで、<code>docker-compose.yml</code>という設定ファイルを読んで、必要な設定をまとめて起動・停止してくれます。今回使う<code>docker compose run</code>や<code>docker compose up</code>は、すべてこちらのツールのコマンドです。<code>docker compose version</code>はこのツール自体のバージョン確認で、両方入っていないと今回の手順は動きません。</p>
+    </details>
   </div>
 
   <div class="slide">
@@ -391,6 +401,17 @@
     <code class="cmd">docker compose up --build</code>
     <p style="margin-top:1rem;">表示されたURL（<code>http://localhost:5173</code> など）をブラウザで開いてください。初回はイメージのビルドで少し時間がかかります。</p>
     <div class="note">アプリの画面が表示されたら今日は成功です！コードを保存すると、この画面も自動で変わるようになっています。止めたい時はターミナルで Ctrl+C です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">（任意）実際にGASへ反映してみる<span class="time-badge">⏱ 目安10分</span></p>
+    <h1>clasp pushの効果を見る</h1>
+    <p>ここまでのログイン・GASプロジェクト作成は、実は今日見たローカルの画面表示そのものには使っていません。「じゃあ何のためにやったの？」と思った人は、ここで実際に試してみてください。</p>
+    <code class="cmd">docker compose run --rm dev npm run push</code>
+    <code class="cmd">docker compose run --rm dev sh -c "cd src && npx clasp deploy"</code>
+    <div class="note">2つ目のコマンドの実行結果に <code>- （英数字の文字列） @1.</code> のような行が出ます。その英数字部分をコピーして、下のURLの◯◯に当てはめてブラウザで開いてください。</div>
+    <code class="cmd">https://script.google.com/macros/s/◯◯/exec</code>
+    <div class="note">さっき見たのと同じ画面が、今度はGoogleのサーバー上で動いているのが確認できたら成功です。これが今日設定したclaspの本当の役割です。</div>
   </div>
 
   <div class="slide">
