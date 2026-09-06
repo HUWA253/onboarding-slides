@@ -279,8 +279,9 @@
   <div class="slide">
     <p class="kicker">実践5<span class="time-badge">⏱ 目安5分</span></p>
     <h1>自分のGoogleアカウントでログイン</h1>
-    <p>ここからはDockerの中でコマンドを実行します。<code>--service-ports</code>はログインの受け取り口（ポート）を一時的に開くためのおまじないです。</p>
-    <code class="cmd">docker compose run --rm --service-ports dev npm run login</code>
+    <p>ここからはDockerの中でコマンドを実行します。<code>-p 9797:9797</code>はログインの受け取り口（ポート）を一時的に開くためのおまじないです。</p>
+    <code class="cmd">docker compose run --rm -p 9797:9797 dev npm run login</code>
+    <div class="note" style="background:#fdf3d6;border-color:#c9a227;">既に<code>docker compose up</code>で画面を表示中の場合は、先にそちらを一度Ctrl+Cで止めてから実行してください（ポートが被るとエラーになります）。</div>
     <ul style="margin-top:1rem;">
       <li>ターミナルにURLが表示されます（自動ではブラウザが開きません）</li>
       <li>そのURLをコピーして、自分のブラウザで開く</li>
