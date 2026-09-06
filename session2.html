@@ -237,21 +237,34 @@
   <div class="slide">
     <p class="kicker">環境を選ぶ<span class="time-badge">⏱ 目安5分</span></p>
     <h1>どこで開発するか選ぶ</h1>
+    <div class="step-card" style="background:#eef2fb;border-color:#33509c;"><span class="num" style="background:#33509c;width:auto;height:auto;border-radius:999px;padding:0.2rem 0.7rem;line-height:normal;">推奨</span>まずは<strong>A. Codespaces</strong>から始めてください。自分のPCには何も入れず、ブラウザだけで今日のゴールまで到達できます。</div>
     <div class="term-grid">
       <div class="term-card">
         <div class="term">A. Codespaces</div>
-        <div class="desc">ブラウザだけで完結。自分のPCには何も入れない。無料枠は月60時間ほど。「たまに手伝う」くらいの関わり方や、PCに何か入れるのに抵抗がある人向け</div>
+        <div class="desc">ブラウザだけで完結。自分のPCには何も入れない。無料枠は月60時間ほど</div>
       </div>
       <div class="term-card">
         <div class="term">B. ローカル＋Docker Desktop</div>
-        <div class="desc">自分のPCにアプリ（GUI）を1つ入れる。時間制限なし。Windows/Macどちらでも同じ手順で使える定番の方法</div>
+        <div class="desc">自分のPCにアプリ（GUI）を1つ入れる。時間制限なし。継続的にガッツリ関わる予定になってから、必要に応じて</div>
       </div>
       <div class="term-card">
         <div class="term">C. ローカル＋Docker Engine(WSL2)</div>
-        <div class="desc">Windows限定。GUIアプリを入れず、WSL2の中に直接コマンドで導入する軽量版。空き容量が厳しい人・ターミナル操作に慣れている人向け</div>
+        <div class="desc">Windows限定の軽量版。空き容量が厳しい人・ターミナル操作に慣れている人向け</div>
       </div>
     </div>
-    <div class="note">継続的にガッツリ関わる予定なら時間制限のないB・Cが安心です。まずはCodespacesで試して、後からローカルに切り替えることもできます。<br>Aを選んだ人は次の2ページ、B・Cを選んだ人はその次から読んでください。</div>
+    <div class="note">迷ったらA一択でOKです。後からいつでもローカル（B・C）に切り替えられます。<br>Aを選んだ人は次の2ページ、B・Cを選んだ人はその次から読んでください。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">この後の準備<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>claspのGoogleログインについて</h1>
+    <ul>
+      <li>この後、<code>clasp</code>というツールからGoogleアカウントへのログインを求められます</li>
+      <li><code>clasp</code>はGoogle自身が公式に配布しているオープンソースのツールで、怪しいものではありません</li>
+      <li>ただし汎用ツールなので、実際にこのアプリが使う範囲より広めの権限（スプレッドシート、ドライブなど）を求めてきます</li>
+    </ul>
+    <div class="note">だからこそ、サークル共有アカウントや自分の本アカウントではなく、<strong>開発用に新しく作った捨てアカウント</strong>でログインしてください。何かあってもそのアカウント限りで済みます。</div>
+    <div class="note" style="background:#fdf3d6;border-color:#c9a227;">途中で「User has not enabled the Apps Script API」のようなメッセージが出ることがあります。その場合は一旦無視してこの先の手順を進めてみてください。それでも詰まる場合は<a class="link" href="https://script.google.com/home/usersettings" target="_blank">script.google.com/home/usersettings</a>で「Google Apps Script API」をONにしてください。</div>
   </div>
 
   <div class="slide">
