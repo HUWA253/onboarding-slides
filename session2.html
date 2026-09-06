@@ -200,7 +200,7 @@
     <p class="kicker">今日のゴール<span class="time-badge">⏱ 目安2分</span></p>
     <h1>今日やること</h1>
     <ul>
-      <li>Node.jsが入っているか確認する</li>
+      <li>Docker Desktopが入っているか確認する</li>
       <li>VSCode（コードエディタ）をインストールする</li>
       <li>プロジェクトのコードを自分のPCに持ってくる（clone）</li>
       <li>自分専用のGoogleアプリスクリプト（GAS）プロジェクトを作る</li>
@@ -214,8 +214,8 @@
     <h1>覚えておきたい言葉</h1>
     <div class="term-grid">
       <div class="term-card">
-        <div class="term">Node.js / npm</div>
-        <div class="desc">JavaScriptをPC上で動かす仕組みと、そのための道具箱（ライブラリ）を管理するツール</div>
+        <div class="term">Docker（ドッカー）</div>
+        <div class="desc">アプリが必要とする道具箱ごと、決まった小さな箱（コンテナ）を用意してくれる仕組み。Node.jsやnpmを自分のPCに直接入れなくても、この箱の中で動かせる</div>
       </div>
       <div class="term-card">
         <div class="term">clone（クローン）</div>
@@ -223,7 +223,7 @@
       </div>
       <div class="term-card">
         <div class="term">clasp（クラスプ）</div>
-        <div class="desc">自分のPCとGoogleアプリスクリプト(GAS)をつなぐための専用ツール</div>
+        <div class="desc">自分のPCとGoogleアプリスクリプト(GAS)をつなぐための専用ツール。今回はDockerの中から使います</div>
       </div>
       <div class="term-card">
         <div class="term">ローカルサーバー</div>
@@ -233,12 +233,14 @@
   </div>
 
   <div class="slide">
-    <p class="kicker">実践1<span class="time-badge">⏱ 目安3分</span></p>
-    <h1>Node.jsが入っているか確認</h1>
-    <p>ターミナル（黒い画面）を開いて、以下を打ってみてください。</p>
-    <code class="cmd">node --version</code>
-    <code class="cmd">npm --version</code>
-    <div class="note">バージョン番号が表示されればOK。「command not found」のようなエラーが出たら、その場で入れ方を確認しましょう。</div>
+    <p class="kicker">実践1<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>Docker Desktopをインストールする</h1>
+    <div class="step-card"><span class="num">1</span><a class="link" href="https://www.docker.com/products/docker-desktop/" target="_blank">https://www.docker.com/products/docker-desktop/</a> からダウンロード</div>
+    <div class="step-card"><span class="num">2</span>インストーラーを実行して起動（初回は少し時間がかかります）</div>
+    <div class="step-card"><span class="num">3</span>ターミナル（黒い画面）で確認</div>
+    <code class="cmd">docker --version</code>
+    <code class="cmd">docker compose version</code>
+    <div class="note">今回はNode.jsやnpmを自分のPCに直接インストールしません。Dockerさえ入っていれば、道具箱の中身は全部お任せできます。</div>
   </div>
 
   <div class="slide">
@@ -275,39 +277,31 @@
   </div>
 
   <div class="slide">
-    <p class="kicker">実践5<span class="time-badge">⏱ 目安3分</span></p>
-    <h1>必要な道具箱をインストール</h1>
-    <p>プロジェクトが使っているライブラリ一式をまとめて入れます。VSCode内のターミナル（メニューの「Terminal」→「New Terminal」）から実行できます。</p>
-    <code class="cmd">npm install</code>
-    <div class="note">少し時間がかかります。エラーが大量に出なければ大丈夫です。</div>
+    <p class="kicker">実践5<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>自分のGoogleアカウントでログイン</h1>
+    <p>ここからはDockerの中でコマンドを実行します。<code>--service-ports</code>はログインの受け取り口（ポート）を一時的に開くためのおまじないです。</p>
+    <code class="cmd">docker compose run --rm --service-ports dev npm run login</code>
+    <ul style="margin-top:1rem;">
+      <li>ターミナルにURLが表示されます（自動ではブラウザが開きません）</li>
+      <li>そのURLをコピーして、自分のブラウザで開く</li>
+      <li>自分専用の開発環境用Googleアカウントでログイン→「許可」を選ぶ</li>
+    </ul>
+    <div class="note">サークル共有アカウントではなく、自分専用の開発用アカウントを使ってください。ログイン情報はプロジェクト内の<code>.clasp-creds</code>フォルダに保存され、GitHubには上がりません（.gitignore済み）。</div>
   </div>
 
   <div class="slide">
     <p class="kicker">実践6<span class="time-badge">⏱ 目安5分</span></p>
-    <h1>自分のGoogleアカウントでログイン</h1>
-    <code class="cmd">npx clasp login</code>
-    <ul style="margin-top:1rem;">
-      <li>ブラウザが開くので、自分のGoogleアカウントでログイン</li>
-      <li>権限の許可を求められたら「許可」を選ぶ</li>
-    </ul>
-    <div class="note">ここで使うのは自分専用の開発環境用アカウントです。サークル共有アカウントではありません。</div>
-  </div>
-
-  <div class="slide">
-    <p class="kicker">実践7<span class="time-badge">⏱ 目安5分</span></p>
     <h1>自分専用のGASプロジェクトを作る</h1>
-    <code class="cmd">cd src</code>
-    <code class="cmd">npx clasp create --type webapp --title "自分の名前_dev"</code>
+    <code class="cmd">docker compose run --rm dev npm run create -- --title "自分の名前_dev"</code>
     <div class="note">これで自分だけが触れる、練習用のGoogleアプリスクリプトのプロジェクトが1つできました。他の人のものとは完全に別物です。</div>
   </div>
 
   <div class="slide">
-    <p class="kicker">実践8（メイン）<span class="time-badge">⏱ 目安10分</span></p>
+    <p class="kicker">実践7（メイン）<span class="time-badge">⏱ 目安10分</span></p>
     <h1>自分のPCで画面を表示する</h1>
-    <code class="cmd">cd ..</code>
-    <code class="cmd">npm run dev</code>
-    <p style="margin-top:1rem;">表示されたURL（<code>http://localhost:5173</code> など）をブラウザで開いてください。</p>
-    <div class="note">アプリの画面が表示されたら今日は成功です！コードを保存すると、この画面も自動で変わるようになっています。</div>
+    <code class="cmd">docker compose up --build</code>
+    <p style="margin-top:1rem;">表示されたURL（<code>http://localhost:5173</code> など）をブラウザで開いてください。初回はイメージのビルドで少し時間がかかります。</p>
+    <div class="note">アプリの画面が表示されたら今日は成功です！コードを保存すると、この画面も自動で変わるようになっています。止めたい時はターミナルで Ctrl+C です。</div>
   </div>
 
   <div class="slide">
