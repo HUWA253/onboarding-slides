@@ -99,7 +99,7 @@
   }
   .term-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem 2rem;
   }
   .term-card {
@@ -107,6 +107,7 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 1rem 1.3rem;
+    min-width: 0;
   }
   .term-card .term {
     font-weight: bold;
@@ -117,12 +118,14 @@
     font-size: 1.15rem;
     margin-top: 0.3rem;
     line-height: 1.6;
+    overflow-wrap: break-word;
   }
   code {
     background: #f0ece0;
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
     font-size: 0.9em;
+    overflow-wrap: anywhere;
   }
   a.link { color: var(--accent); word-break: break-all; }
 
