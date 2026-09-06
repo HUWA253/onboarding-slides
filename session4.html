@@ -177,6 +177,13 @@
     padding: 0.3rem 1rem !important;
     font-size: 0.95rem !important;
   }
+  .report-btn {
+    background: #fdeceb !important;
+    color: #9a2f27 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
 
   body { position: relative; }
 
@@ -321,6 +328,7 @@
     <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
     <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
     <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
+    <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 エラー報告</button>
   </div>
   <button id="nextBtn" onclick="go(1)">▶</button>
 </div>
@@ -370,6 +378,21 @@
       + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
       + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
     copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function reportError() {
+    const kicker = slides[idx].querySelector('.kicker');
+    const h1 = slides[idx].querySelector('h1');
+    const kickerLabel = kicker ? kicker.childNodes[0].textContent.trim() : '';
+    const pageLabel = kickerLabel + (h1 ? ' / ' + h1.textContent.trim() : '');
+    const title = encodeURIComponent(`[エラー報告] ${document.title} - ${pageLabel}`);
+    const body = encodeURIComponent(
+      `## どのページで\n${pageLabel}（${idx + 1} / ${slides.length}ページ目）\n\n` +
+      `## 実行したコマンド\n\`\`\`\n（ここに貼り付け）\n\`\`\`\n\n` +
+      `## 出たエラーメッセージ\n\`\`\`\n（ここに貼り付け）\n\`\`\`\n\n` +
+      `## 環境\n（Codespaces / ローカルDocker Desktop / ローカルDocker Engine など）`
+    );
+    window.open(`https://github.com/HUWA253/onboarding-slides/issues/new?title=${title}&body=${body}`, '_blank');
   }
 
   function toggleFullscreen() {
