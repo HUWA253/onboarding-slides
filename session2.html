@@ -186,6 +186,12 @@
     align-items: center;
     gap: 1rem;
   }
+  .home-btn {
+    color: var(--muted) !important;
+    font-size: 1rem !important;
+    text-decoration: none;
+    padding: 0.3rem 0.6rem !important;
+  }
   .gemini-btn {
     background: #eef2fb !important;
     color: #2b3a67 !important;
@@ -460,6 +466,7 @@
   <button id="prevBtn" onclick="go(-1)">◀</button>
   <div class="footer-center">
     <span id="count"></span>
+    <a class="home-btn" href="index.html">🏠 <span class="btn-label">一覧へ</span></a>
     <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 <span class="btn-label">講義全体をGeminiに伝える</span></button>
     <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 <span class="btn-label">詰まったらコピー</span></button>
     <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 <span class="btn-label">エラー報告</span></button>
