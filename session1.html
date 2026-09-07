@@ -158,10 +158,17 @@
     gap: 1rem;
   }
   .home-btn {
-    color: var(--muted) !important;
-    font-size: 1rem !important;
+    position: fixed;
+    top: 1.2rem;
+    left: 1.2rem;
+    z-index: 50;
+    background: #fff;
+    color: var(--muted);
     text-decoration: none;
-    padding: 0.3rem 0.6rem !important;
+    font-size: 1.3rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   }
   .gemini-btn {
     background: #eef2fb !important;
@@ -200,6 +207,8 @@
 </style>
 </head>
 <body>
+
+  <a class="home-btn" href="index.html">🏠</a>
 
   <div class="slide active center">
     <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第1回<span class="time-badge">⏱ 目安1分</span></p>
@@ -326,7 +335,6 @@
   <button id="prevBtn" onclick="go(-1)">◀</button>
   <div class="footer-center">
     <span id="count"></span>
-    <a class="home-btn" href="index.html">🏠 <span class="btn-label">一覧へ</span></a>
     <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 <span class="btn-label">講義全体をGeminiに伝える</span></button>
     <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 <span class="btn-label">詰まったらコピー</span></button>
     <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 <span class="btn-label">エラー報告</span></button>
