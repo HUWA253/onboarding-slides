@@ -205,6 +205,11 @@
     border-radius: 999px;
     pointer-events: none;
   }
+  .tutorial-lit {
+    position: relative;
+    z-index: 502;
+    filter: brightness(1.4);
+  }
 
   @media (max-width: 600px) {
     .slide { padding: 3vh 6vw 8vh; }
@@ -326,7 +331,7 @@
 </div>
 
 <div class="tutorial-overlay" id="tutorialOverlay">
-  <div class="tutorial-spotlight" id="tutorialSpotlight"></div>
+  <div id="tutorialSpotlights"></div>
   <div class="tutorial-box">
     <p class="tutorial-text" id="tutorialText"></p>
     <div class="tutorial-controls">
@@ -413,27 +418,36 @@
     {
       targets: ['copyAllBtn', 'copySlideBtn'],
       text: '🧭ボタンで、この講義全体の内容をGeminiに伝えられます。🤖ボタンは、詰まったページの内容をコピーしてGeminiに質問する時に使います。'
+    },
+    {
+      targets: ['reportErrorBtn'],
+      text: '🐛ボタンで、コマンドを実行して出たエラーを報告できます。後から自分の操作ミスだったと分かっても構わないので、気にせず報告してください。'
     }
   ];
   let tutorialStep = 0;
+  let litElements = [];
 
   function positionSpotlight(targetIds) {
-    const spot = document.getElementById('tutorialSpotlight');
+    litElements.forEach(el => el.classList.remove('tutorial-lit'));
+    litElements = [];
+
+    const container = document.getElementById('tutorialSpotlights');
+    container.innerHTML = '';
+
     const els = targetIds.map(id => document.getElementById(id)).filter(Boolean);
-    if (els.length === 0) {
-      spot.style.display = 'none';
-      return;
-    }
-    const rects = els.map(el => el.getBoundingClientRect());
-    const left = Math.min(...rects.map(r => r.left)) - 8;
-    const top = Math.min(...rects.map(r => r.top)) - 6;
-    const right = Math.max(...rects.map(r => r.right)) + 8;
-    const bottom = Math.max(...rects.map(r => r.bottom)) + 6;
-    spot.style.display = 'block';
-    spot.style.left = left + 'px';
-    spot.style.top = top + 'px';
-    spot.style.width = (right - left) + 'px';
-    spot.style.height = (bottom - top) + 'px';
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const spot = document.createElement('div');
+      spot.className = 'tutorial-spotlight';
+      spot.style.left = (r.left - 8) + 'px';
+      spot.style.top = (r.top - 6) + 'px';
+      spot.style.width = (r.width + 16) + 'px';
+      spot.style.height = (r.height + 12) + 'px';
+      container.appendChild(spot);
+
+      el.classList.add('tutorial-lit');
+      litElements.push(el);
+    });
   }
 
   function showTutorialStep() {
@@ -459,6 +473,9 @@
 
   function endTutorial() {
     document.getElementById('tutorialOverlay').classList.remove('active');
+    litElements.forEach(el => el.classList.remove('tutorial-lit'));
+    litElements = [];
+    document.getElementById('tutorialSpotlights').innerHTML = '';
     try { localStorage.setItem('circleApp_tutorialSeen', '1'); } catch (e) {}
   }
 
