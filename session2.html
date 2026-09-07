@@ -213,6 +213,9 @@
     .step-card { font-size: 1.05rem; padding: 0.8rem 1rem; }
     .note { font-size: 0.95rem; padding: 0.8rem 1rem; }
     .slide-footer { font-size: 0.85rem; }
+    .footer-center { gap: 0.4rem; }
+    .gemini-btn, .report-btn { padding: 0.3rem 0.6rem !important; }
+    .btn-label { display: none; }
     .term-card .term { font-size: 1.1rem; }
     .term-card .desc { font-size: 0.95rem; }
     .cmd { font-size: 1rem; }
@@ -459,9 +462,9 @@
   <div class="footer-center">
     <span id="count"></span>
     <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
-    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 講義全体をGeminiに伝える</button>
-    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 詰まったらコピー</button>
-    <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 エラー報告</button>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 <span class="btn-label">講義全体をGeminiに伝える</span></button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 <span class="btn-label">詰まったらコピー</span></button>
+    <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 <span class="btn-label">エラー報告</span></button>
   </div>
   <button id="nextBtn" onclick="go(1)">▶</button>
 </div>
