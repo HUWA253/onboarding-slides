@@ -123,7 +123,6 @@
     padding: 0.3rem 0.8rem;
   }
   .slide-footer button:disabled { color: #ccc; cursor: default; }
-  .slide-footer .fullscreen-btn { color: var(--muted); font-size: 1rem; }
   .footer-center {
     display: flex;
     align-items: center;
@@ -304,7 +303,6 @@
   <button id="prevBtn" onclick="go(-1)">◀</button>
   <div class="footer-center">
     <span id="count"></span>
-    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ 全画面</button>
     <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 <span class="btn-label">講義全体をGeminiに伝える</span></button>
     <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 <span class="btn-label">詰まったらコピー</span></button>
     <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 <span class="btn-label">エラー報告</span></button>
@@ -385,18 +383,9 @@
     window.open(`https://github.com/HUWA253/onboarding-slides/issues/new?title=${title}&body=${body}`, '_blank');
   }
 
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    } else {
-      document.exitFullscreen();
-    }
-  }
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ') go(1);
     if (e.key === 'ArrowLeft') go(-1);
-    if (e.key === 'f' || e.key === 'F') toggleFullscreen();
   });
 
   render();
