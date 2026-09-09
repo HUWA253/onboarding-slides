@@ -186,18 +186,65 @@
     align-items: center;
     gap: 1rem;
   }
-  .home-btn {
+  .menu-btn {
     position: fixed;
     top: 1.2rem;
     left: 1.2rem;
-    z-index: 50;
+    z-index: 200;
     background: #fff;
     color: var(--muted);
-    text-decoration: none;
-    font-size: 1.3rem;
-    padding: 0.4rem 0.8rem;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0.5rem 0.8rem;
     border-radius: 999px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .side-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    max-width: 80vw;
+    background: #fff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+    z-index: 160;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    padding: 4rem 1.2rem 1.5rem;
+    overflow-y: auto;
+  }
+  .side-drawer.open {
+    transform: translateX(0);
+  }
+  .side-drawer a {
+    display: block;
+    padding: 0.7rem 0.6rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  .side-drawer a:hover, .side-drawer a.active {
+    background: #f0ece0;
+    color: var(--accent);
+    font-weight: bold;
   }
   .gemini-btn {
     background: #eef2fb !important;
@@ -238,7 +285,16 @@
 </head>
 <body>
 
-  <a class="home-btn" href="index.html">🏠</a>
+  <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">☰</button>
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMenu()"></div>
+  <nav class="side-drawer" id="sideDrawer">
+    <a href="index.html">📚 一覧へ</a>
+    <a href="session0.html" data-session="session0.html">第0回: キックオフ・利用体験会</a>
+    <a href="session1.html" data-session="session1.html">第1回: Git/GitHub基礎会</a>
+    <a href="session2.html" data-session="session2.html">第2回: 開発環境構築会</a>
+    <a href="session3.html" data-session="session3.html">第3回: コードリーディング＆最初のタスク会</a>
+    <a href="session4.html" data-session="session4.html">第4回: PR・レビュー実践会</a>
+  </nav>
 
   <div class="slide active center">
     <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 第2回<span class="time-badge">⏱ 目安1分</span></p>
@@ -550,6 +606,36 @@
   });
 
   render();
+
+  function toggleMenu() {
+    document.getElementById('sideDrawer').classList.toggle('open');
+    document.getElementById('drawerBackdrop').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('sideDrawer').classList.remove('open');
+    document.getElementById('drawerBackdrop').classList.remove('open');
+  }
+  (function highlightCurrentSession() {
+    const current = location.pathname.split('/').pop();
+    document.querySelectorAll('.side-drawer a[data-session]').forEach((a) => {
+      if (a.getAttribute('data-session') === current) a.classList.add('active');
+    });
+  })();
+  (function setupMenuHover() {
+    const menuBtn = document.getElementById('menuBtn');
+    const drawer = document.getElementById('sideDrawer');
+    let closeTimer;
+    const openMenu = () => {
+      clearTimeout(closeTimer);
+      drawer.classList.add('open');
+      document.getElementById('drawerBackdrop').classList.add('open');
+    };
+    const scheduleClose = () => { closeTimer = setTimeout(closeMenu, 300); };
+    menuBtn.addEventListener('mouseenter', openMenu);
+    menuBtn.addEventListener('mouseleave', scheduleClose);
+    drawer.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+    drawer.addEventListener('mouseleave', scheduleClose);
+  })();
 </script>
 
 </body>
