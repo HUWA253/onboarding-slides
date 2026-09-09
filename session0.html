@@ -188,6 +188,40 @@
     color: var(--accent);
     font-weight: bold;
   }
+  .help-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .help-overlay.active { display: flex; }
+  .help-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.3rem 1.7rem;
+    max-width: 90vw;
+    width: 480px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .help-box p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 1.2rem;
+  }
+  .help-box button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
   .gemini-btn {
     background: #eef2fb !important;
     color: #2b3a67 !important;
@@ -279,8 +313,15 @@
 
   <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">☰</button>
   <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMenu()"></div>
+  <div class="help-overlay" id="helpOverlay">
+    <div class="help-box">
+      <p>画面下の🧭ボタンを押すと、この講義全体の内容がコピーされます。まず新しいGeminiのチャットに貼り付けてください。分からないページが出てきたら、そのページで🤖ボタンを押して、同じチャットの続きに貼り付けて質問できます。</p>
+      <button onclick="closeHelp()">閉じる</button>
+    </div>
+  </div>
   <nav class="side-drawer" id="sideDrawer">
     <a href="index.html">📚 一覧へ</a>
+    <a href="#" onclick="showHelp(); return false;">❓ 使い方</a>
     <a href="session0.html" data-session="session0.html">第0回: キックオフ・利用体験会</a>
     <a href="session1.html" data-session="session1.html">第1回: Git/GitHub基礎会</a>
     <a href="session2.html" data-session="session2.html">第2回: 開発環境構築会</a>
@@ -550,6 +591,13 @@
   function toggleMenu() {
     document.getElementById('sideDrawer').classList.toggle('open');
     document.getElementById('drawerBackdrop').classList.toggle('open');
+  }
+  function showHelp() {
+    closeMenu();
+    document.getElementById('helpOverlay').classList.add('active');
+  }
+  function closeHelp() {
+    document.getElementById('helpOverlay').classList.remove('active');
   }
   function closeMenu() {
     document.getElementById('sideDrawer').classList.remove('open');
