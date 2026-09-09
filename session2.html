@@ -26,7 +26,7 @@
     width: 100vw;
     height: calc(100vh - 6vh);
     background: var(--bg);
-    padding: 4vh 10vw 6vh;
+    padding: max(4vh, 4.5rem) 10vw 6vh;
     flex-direction: column;
     justify-content: flex-start;
     overflow-y: auto;
@@ -217,7 +217,7 @@
   body { position: relative; }
 
   @media (max-width: 600px) {
-    .slide { padding: 3vh 6vw 8vh; }
+    .slide { padding: max(3vh, 4.5rem) 6vw 8vh; }
     .slide h1 { font-size: 1.8rem; line-height: 1.35; margin: 0.5rem 0 1rem; }
     .slide p, .slide li { font-size: 1.05rem; line-height: 1.6; }
     .kicker { font-size: 0.9rem; }
