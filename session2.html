@@ -397,11 +397,11 @@
   <div class="slide">
     <p class="kicker">環境を選ぶ<span class="time-badge">⏱ 目安5分</span></p>
     <h1>どこで開発するか選ぶ</h1>
-    <div class="step-card" style="background:#eef2fb;border-color:#33509c;"><span class="num" style="background:#33509c;width:auto;height:auto;border-radius:999px;padding:0.2rem 0.7rem;line-height:normal;">推奨</span>まずは<strong>A. Codespaces</strong>から始めてください。自分のPCには何も入れず、ブラウザだけで今日のゴールまで到達できます。</div>
+    <div class="step-card" style="background:#eef2fb;border-color:#33509c;"><span class="num" style="background:#33509c;width:auto;height:auto;border-radius:999px;padding:0.2rem 0.7rem;line-height:normal;">推奨</span>まずは<strong>A. Codespaces</strong>から始めてください。自分のPCにはVSCode本体だけ入れれば、今日のゴールまで到達できます。</div>
     <div class="term-grid">
       <div class="term-card">
         <div class="term">A. Codespaces</div>
-        <div class="desc">ブラウザだけで完結。自分のPCには何も入れない。無料枠は月60時間ほど</div>
+        <div class="desc">開発環境自体はブラウザで完結。ただしGoogleログインの手順だけ、自分のPCにVSCode本体＋Codespaces拡張機能が必要。無料枠は月60時間ほど</div>
       </div>
       <div class="term-card">
         <div class="term">B. ローカル＋Docker Desktop</div>
@@ -434,7 +434,7 @@
     <div class="step-card"><span class="num">2</span>緑色の「Code」ボタン→「Codespaces」タブ→「Create codespace on main」</div>
     <div class="step-card"><span class="num">3</span>少し待つと、ブラウザの中にVSCodeそっくりの画面が開く</div>
     <div class="note">この画面の中に、もうVSCode・Git・Docker・Node.jsが全部入っています。自分のPCには何もインストールしていません。</div>
-    <div class="note">すでに自分のPCにVSCode本体（デスクトップアプリ）が入っている人は、ブラウザの代わりにそちらで開くこともできます。「Codespaces」タブの「...」（ケバブメニュー）から「Open in Visual Studio Code」を選ぶと、使い慣れたエディタでそのまま同じCodespaceに接続できます（やることは以降すべて同じです）。</div>
+    <div class="note" style="background:#fdf3d6;border-color:#c9a227;">次のページの<code>npm run login</code>は、ブラウザのままだと認証がうまく通りません。自分のPCに<strong>VSCode本体（デスクトップアプリ）＋「Codespaces」拡張機能</strong>を入れて、「Codespaces」タブの「...」（ケバブメニュー）→「Open in Visual Studio Code」からこのCodespaceに接続し直してから次に進んでください（まだ入れていない場合は<a class="link" href="https://code.visualstudio.com/" target="_blank">code.visualstudio.com</a>からインストールしてください）。</div>
   </div>
 
   <div class="slide">
