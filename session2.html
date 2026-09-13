@@ -369,7 +369,7 @@
       </div>
       <div class="term-card">
         <div class="term">clone（クローン）</div>
-        <div class="desc">GitHub上のリポジトリを、自分のPCにまるごとコピーしてくること</div>
+        <div class="desc">GitHub上のリポジトリを、自分のPCにまるごとコピーしてくること。この後出てくる「GASプロジェクトを作る」こととは全くの別物なので注意</div>
       </div>
       <div class="term-card">
         <div class="term">clasp（クラスプ）</div>
@@ -391,6 +391,16 @@
       <p>Dockerを使わない場合、参加する人がそれぞれ自分のPCにNode.jsやnpmを個別にインストールする必要があります。バージョンが人によって微妙に違うと「私のPCでは動くのに、あなたのPCでは動かない」という事故が起きやすくなります。</p>
       <p>Dockerは「動かす環境」を丸ごと1つの箱にして配ってくれる仕組みです。誰のPCで動かしても中身は完全に同じになるので、この事故を防げます。今回Dockerを使っているのは、まさに「みんなの環境を揃える」ためです。</p>
       <p>ちなみにCodespacesを選んだ人は、この先Dockerを直接使いません。Codespaces自体がもう「決まった環境の箱」なので、その中でさらにDockerの箱を使う理由がないためです（詳しくは次のページの「もっと詳しく」参照）。</p>
+    </details>
+    <details class="more" style="background:#fdf3d6;border-color:#c9a227;">
+      <summary>⚠️ 重要：「git clone」と「GASプロジェクトを作る」は全くの別物です</summary>
+      <p>この後の手順で「プロジェクトのコード」と「自分専用のGASプロジェクト」という、似ているようで別の2つのものを扱います。</p>
+      <ol>
+        <li><strong>プロジェクトのコード</strong>：この後輩オンボーディングで開発している、みんなで共有するアプリ本体のコード。<code>git clone</code>（またはCodespacesを起動）で持ってくるもの</li>
+        <li><strong>自分専用のGASプロジェクト</strong>：後で出てくる<code>npm run create</code>で作る、動作確認用にあなただけが触れるGoogleアプリスクリプトのプロジェクト。コードではなく、Google側に作られる「実行環境」</li>
+      </ol>
+      <p><strong>必ず1→2の順番で進めてください。</strong>先に2（GASプロジェクト）から作業を始めて、後からそこに`git init`するようなことはしないでください。プロジェクトのコード全体とは無関係の、あなた1人だけの履歴になってしまい、後でPRを作ろうとしても「何を変更したのか」が正しく表示されず、レビューできない状態になります。</p>
+      <p>「あれ、自分は`git clone`した覚えがない」という場合は、そのまま作業を進めず、一度声をかけてください。</p>
     </details>
   </div>
 
