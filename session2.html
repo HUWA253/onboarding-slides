@@ -335,6 +335,7 @@
     <a href="session2.html" data-session="session2.html">第2回: 開発環境構築会</a>
     <a href="session3.html" data-session="session3.html">第3回: コードリーディング＆最初のタスク会</a>
     <a href="session4.html" data-session="session4.html">第4回: PR・レビュー実践会</a>
+    <a href="session5.html" data-session="session5.html">番外編: 秘密情報とAIの使い方</a>
   </nav>
 
   <div class="slide active center">
@@ -537,6 +538,13 @@
     <h1>自分専用のGASプロジェクトを作る</h1>
     <code class="cmd">docker compose run --rm dev npm run create -- --title "自分の名前_dev"</code>
     <div class="note">これで自分だけが触れる、練習用のGoogleアプリスクリプトのプロジェクトが1つできました。他の人のものとは完全に別物です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">補足<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>秘密情報はスクリプトプロパティへ</h1>
+    <p>スプレッドシートのIDやパスワードなどの秘密情報は、コードに書かず、今作ったGASプロジェクトの「スクリプトプロパティ」に入れます。</p>
+    <div class="note">今日の時点では設定しなくて大丈夫です。実際の開発で秘密情報を受け取る前に、<a class="link" href="session5.html">番外編: 秘密情報とAIの使い方</a> を読んでおいてください。</div>
   </div>
 
   <div class="slide">
