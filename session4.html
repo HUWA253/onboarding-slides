@@ -316,6 +316,7 @@
     <a href="session2.html" data-session="session2.html">第2回: 開発環境構築会</a>
     <a href="session3.html" data-session="session3.html">第3回: コードリーディング＆最初のタスク会</a>
     <a href="session4.html" data-session="session4.html">第4回: PR・レビュー実践会</a>
+    <a href="session5.html" data-session="session5.html">番外編: 秘密情報とAIの使い方</a>
   </nav>
 
   <div class="slide active center">
@@ -373,6 +374,15 @@
     <code class="cmd">git push -u origin add-自分の名前</code>
     <div class="note"><code>-u</code>は「このブランチはGitHub上のこの名前と対応してますよ」と覚えさせるおまじないです。次回以降は<code>git push</code>だけで済むようになります。</div>
     <div class="note">ここで一度GitHub上のリポジトリページを開いてみてください。ブランチの一覧に、今pushした<code>add-自分の名前</code>が実際に増えているはずです。自分のPC内の作業が、ちゃんとGitHub側にも届いていることを確認できます。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">PRの前に<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>秘密情報が入っていないか確認</h1>
+    <code class="cmd">git status</code>
+    <code class="cmd">git diff main</code>
+    <p>スプレッドシートのID・パスワード・関係ないフォルダが混ざっていないかを見てから、PRを作ります。</p>
+    <div class="note">PRを作ると、あとでブランチを消しても履歴が残り続けます。もし秘密情報が入っていたら、PRを作らずに先輩に伝えてください。詳しくは <a class="link" href="session5.html">番外編: 秘密情報とAIの使い方</a>。</div>
   </div>
 
   <div class="slide">

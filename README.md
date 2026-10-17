@@ -18,6 +18,7 @@ https://huwa253.github.io/onboarding-slides/
 | `session2.html` | 第2回: 開発環境構築会（Codespaces / Docker） |
 | `session3.html` | 第3回: コードリーディング＆最初のタスク会 |
 | `session4.html` | 第4回: PR・レビュー実践会 |
+| `session5.html` | 番外編: 秘密情報とAIの使い方（秘密情報を渡す前に読んでもらう） |
 
 第4回終了時点で、要件定義書（別リポジトリ）を渡す想定です。
 
@@ -25,3 +26,4 @@ https://huwa253.github.io/onboarding-slides/
 
 - 各スライドは1つのHTMLファイルに完結しています。共通のCSS/JSも各ファイルに埋め込まれているため、デザインを変える場合は複数ファイルへの重複反映が必要です
 - 実際の開発環境（`docker-compose.yml`のポート番号、npmスクリプト名など）に変更があった場合は、`session2.html`の手順もあわせて更新してください
+- このリポジトリはPublicです。スライドに実際のIDやパスワード、スプレッドシート名、個人名を書かないでください（例はダミーの値にする）

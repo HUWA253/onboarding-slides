@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>番外編 秘密情報とAIの使い方</title>
+<style>
+  :root {
+    --accent: #2f6f4f;
+    --bg: #fdfdfb;
+    --border: #ddd6c9;
+    --text: #2b2b2b;
+    --muted: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    color: var(--text);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: calc(100vh - 6vh);
+    background: var(--bg);
+    padding: max(4vh, 4.5rem) 10vw 6vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    overflow-x: auto;
+  }
+  .slide.active { display: flex; }
+  .slide.center { align-items: center; text-align: center; justify-content: center; }
+
+  .kicker {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .time-badge {
+    background: #f0ece0;
+    color: var(--muted);
+    font-weight: normal;
+    font-size: 0.95rem;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding: 0.2rem 0.9rem;
+  }
+  .slide h1 {
+    font-size: 3rem;
+    line-height: 1.35;
+    margin: 0.5rem 0 2rem;
+    border-bottom: 5px solid var(--accent);
+    padding-bottom: 1rem;
+    display: inline-block;
+  }
+  .slide.center h1 { border-bottom: none; padding-bottom: 0; }
+  .slide p, .slide li {
+    font-size: 1.6rem;
+    line-height: 1.9;
+  }
+  .slide ul { padding-left: 1.6rem; }
+
+  .step-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.6rem;
+    margin: 0.7rem 0;
+    font-size: 1.4rem;
+  }
+  .step-card .num {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 999px;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.1rem;
+    margin-right: 0.8rem;
+  }
+  .cmd {
+    display: block;
+    background: #2b2b2b;
+    color: #e8f5e9;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 1.3rem;
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    margin: 0.8rem 0 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .note {
+    background: #fff7ec;
+    border: 1px dashed #d8b56a;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    color: #6b5220;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+  }
+  .term-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem 2rem;
+  }
+  .term-card {
+    background: #f5f2e8;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    min-width: 0;
+  }
+  .term-card .term {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .term-card .desc {
+    font-size: 1.1rem;
+    margin-top: 0.3rem;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+  }
+  code {
+    background: #f0ece0;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+  a.link { color: var(--accent); word-break: break-all; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 6vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3vw;
+    font-size: 1rem;
+    color: var(--muted);
+  }
+  .slide-footer button {
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.3rem 0.8rem;
+  }
+  .slide-footer button:disabled { color: #ccc; cursor: default; }
+  .footer-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .menu-btn {
+    position: fixed;
+    top: 1.2rem;
+    left: 1.2rem;
+    z-index: 200;
+    background: #fff;
+    color: var(--muted);
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0.5rem 0.8rem;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .side-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    max-width: 80vw;
+    background: #fff;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.2);
+    z-index: 160;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    padding: 4rem 1.2rem 1.5rem;
+    overflow-y: auto;
+  }
+  .side-drawer.open {
+    transform: translateX(0);
+  }
+  .side-drawer a {
+    display: block;
+    padding: 0.7rem 0.6rem;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  .side-drawer a:hover, .side-drawer a.active {
+    background: #f0ece0;
+    color: var(--accent);
+    font-weight: bold;
+  }
+  .help-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .help-overlay.active { display: flex; }
+  .help-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1.3rem 1.7rem;
+    max-width: 90vw;
+    width: 480px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .help-box p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin: 0 0 1.2rem;
+  }
+  .help-box button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.5rem 1.3rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .gemini-btn {
+    background: #eef2fb !important;
+    color: #2b3a67 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+  .report-btn {
+    background: #fdeceb !important;
+    color: #9a2f27 !important;
+    border-radius: 999px;
+    padding: 0.3rem 1rem !important;
+    font-size: 0.95rem !important;
+  }
+
+  body { position: relative; }
+
+  @media (max-width: 600px) {
+    .slide { padding: max(3vh, 4.5rem) 6vw 8vh; }
+    .slide h1 { font-size: 1.8rem; line-height: 1.35; margin: 0.5rem 0 1rem; }
+    .slide p, .slide li { font-size: 1.05rem; line-height: 1.6; }
+    .kicker { font-size: 0.9rem; }
+    .time-badge { font-size: 0.75rem; padding: 0.15rem 0.6rem; }
+    .step-card { font-size: 1.05rem; padding: 0.8rem 1rem; }
+    .note { font-size: 0.95rem; padding: 0.8rem 1rem; }
+    .slide-footer { font-size: 0.85rem; }
+    .footer-center { gap: 0.4rem; }
+    .gemini-btn, .report-btn { padding: 0.3rem 0.6rem !important; }
+    .btn-label { display: none; }
+    .term-card .term { font-size: 1.1rem; }
+    .term-card .desc { font-size: 0.95rem; }
+    .cmd { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <button class="menu-btn" id="menuBtn" onclick="toggleMenu()">☰</button>
+  <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMenu()"></div>
+  <div class="help-overlay" id="helpOverlay">
+    <div class="help-box">
+      <p>画面下の🧭ボタンを押すと、この講義全体の内容がコピーされます。まず新しいGeminiのチャットに貼り付けてください。分からないページが出てきたら、そのページで🤖ボタンを押して、同じチャットの続きに貼り付けて質問できます。</p>
+      <button onclick="closeHelp()">閉じる</button>
+    </div>
+  </div>
+  <nav class="side-drawer" id="sideDrawer">
+    <a href="index.html">📚 一覧へ</a>
+    <a href="#" onclick="showHelp(); return false;">❓ 使い方</a>
+    <a href="session0.html" data-session="session0.html">第0回: キックオフ・利用体験会</a>
+    <a href="session1.html" data-session="session1.html">第1回: Git/GitHub基礎会</a>
+    <a href="session2.html" data-session="session2.html">第2回: 開発環境構築会</a>
+    <a href="session3.html" data-session="session3.html">第3回: コードリーディング＆最初のタスク会</a>
+    <a href="session4.html" data-session="session4.html">第4回: PR・レビュー実践会</a>
+    <a href="session5.html" data-session="session5.html">番外編: 秘密情報とAIの使い方</a>
+  </nav>
+
+  <div class="slide active center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">サークルアプリ オンボーディング 番外編<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>秘密情報とAIの使い方</h1>
+    <p>スプレッドシートのIDやパスワードのような「秘密情報」を、どこに置いて、どう扱うかの約束ごとです。実際の開発に入る前に、一度読んでおいてください。</p>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">このページのゴール<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>今日やること</h1>
+    <ul>
+      <li>何が「秘密情報」なのかを知る</li>
+      <li>秘密情報の置き場所（スクリプトプロパティ）を知る</li>
+      <li>AIにコードを貼るとき、pushするときの確認のしかたを知る</li>
+      <li>うっかり上げてしまったときにどうするかを知る</li>
+    </ul>
+    <div class="note">秘密情報を受け取るのは、この番外編を読んでからにしてもらっています。読んだら先輩に一言伝えてください。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">今日使う用語<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>覚えておきたい言葉</h1>
+    <div class="term-grid">
+      <div class="term-card">
+        <div class="term">秘密情報</div>
+        <div class="desc">知られると、他人にデータを読まれたり書き換えられたりするきっかけになる値。ID・パスワード・鍵ファイルなど</div>
+      </div>
+      <div class="term-card">
+        <div class="term">スクリプトプロパティ</div>
+        <div class="desc">GASのプロジェクトごとに持てる「設定値の保管場所」。コードとは別に保存されるので、gitには上がらない</div>
+      </div>
+      <div class="term-card">
+        <div class="term">.env</div>
+        <div class="desc">V1（Flask版）で秘密情報を置いていたファイル。V2ではスクリプトプロパティがこの役割を引き継いでいる</div>
+      </div>
+      <div class="term-card">
+        <div class="term">共有設定</div>
+        <div class="desc">Googleのファイルを「誰が開けるか」の設定。「制限付き」なら、IDを知っていても共有された人しか開けない</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">基本1<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>何が秘密情報？</h1>
+    <div class="step-card"><span class="num">1</span>スプレッドシートのID：URLの <code>/d/</code> と <code>/edit</code> の間の長い文字列（例：<code>1AbCdEfG…xyz</code>）</div>
+    <div class="step-card"><span class="num">2</span>GASのデプロイID：<code>AKfycb…</code> で始まる長い文字列</div>
+    <div class="step-card"><span class="num">3</span>パスワード、鍵ファイル（<code>.json</code>）、トークン（<code>token.json</code> など）</div>
+    <div class="note">「IDだけなら共有設定で守られているから平気」ではなく、<strong>そもそも外に出さない</strong>のが約束です。共有設定のミスと重なったときに、初めて漏れるからです。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">基本2<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>コードには書かない</h1>
+    <p>❌ コードに直接書く（gitに上がる）</p>
+    <code class="cmd">const SPREADSHEET_ID = "1AbCdEfG...xyz"</code>
+    <p style="margin-top:1.5rem;">⭕ スクリプトプロパティから読む（gitに上がらない）</p>
+    <code class="cmd">const id = PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID")</code>
+    <div class="note">コードには「どの名前の設定を読むか」だけを書き、値そのものはスクリプトプロパティに置きます。V1で <code>os.getenv("…")</code> と書いていたのと同じ考え方です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">基本3<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>スクリプトプロパティに入れる</h1>
+    <div class="step-card"><span class="num">1</span>ブラウザで <a class="link" href="https://script.google.com" target="_blank">script.google.com</a> を開き、第2回で作った自分専用のGASプロジェクトを開く</div>
+    <div class="step-card"><span class="num">2</span>左の歯車アイコン「プロジェクトの設定」を開く</div>
+    <div class="step-card"><span class="num">3</span>一番下の「スクリプト プロパティ」→「スクリプト プロパティを追加」</div>
+    <div class="step-card"><span class="num">4</span>プロパティ名（例：<code>SPREADSHEET_ID</code>）と値を入れて「保存」</div>
+    <div class="note">スクリプトプロパティはプロジェクトごとに別々です。自分の開発用プロジェクトには、先輩から共有された開発用スプレッドシートのIDを入れます。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">AIの使い方<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>AIに貼る前に確認する</h1>
+    <ul>
+      <li>GeminiなどのAIにコードやエラーを貼ると、その内容は自分の手元から外に出たことになる</li>
+      <li>貼る前に、ID・パスワード・メールアドレス・名簿の中身（実在の人の情報）が入っていないか見る</li>
+      <li>入っていたら <code>"XXXX"</code> のようなダミーに置き換えてから貼る</li>
+      <li>AIが出したコードに、値の直書きが混ざっていないかも確認する</li>
+    </ul>
+    <div class="note">このスライドの「🤖 詰まったらコピー」はスライドの文章だけをコピーするので、そのまま貼って大丈夫です。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">pushの前に<span class="time-badge">⏱ 目安5分</span></p>
+    <h1>addする前に中身を見る</h1>
+    <code class="cmd">git status</code>
+    <code class="cmd">git diff --staged</code>
+    <div class="note"><code>git add .</code> は「このフォルダの中身を全部」です。秘密情報の入ったファイルや、関係ないフォルダまで入ることがあります。たとえば作業フォルダの中で <code>git clone</code> すると、リポジトリの中にリポジトリが入った「マトリョーシカ状態」になり、そのまま <code>git add .</code> すると別リポジトリへの参照として記録されてしまいます。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">知っておくこと<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>一度上げると残り続ける</h1>
+    <ul>
+      <li>あとのコミットで値を消しても、過去のコミットには残っている</li>
+      <li>そのブランチからPRを作ると、ブランチを消してもPR側に履歴が残り続ける</li>
+      <li>リポジトリは今Privateでも、将来公開する可能性がある</li>
+    </ul>
+    <div class="note">秘密情報が入ったコミットのあるブランチからは、PRを作らないでください。mainから新しくブランチを切り直して、そちらでPRを作ります。</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">もしものとき<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>うっかり上げてしまったら</h1>
+    <div class="step-card"><span class="num">1</span>隠さず、すぐ先輩に伝える（怒りません。早いほど対処が楽です）</div>
+    <div class="step-card"><span class="num">2</span>自分で履歴を書き換えたり、<code>--force</code> でpushしたりしない</div>
+    <div class="step-card"><span class="num">3</span>パスワードの変更や共有設定の見直しなど、どう対処するかは先輩が判断する</div>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">受け取ったら<span class="time-badge">⏱ 目安3分</span></p>
+    <h1>受け取った秘密情報の扱い</h1>
+    <ul>
+      <li>Issue・PR・コミットメッセージ・グループのチャットには書かない</li>
+      <li>他の人に転送しない（必要な人には先輩から渡します）</li>
+      <li>置き場所は自分のGASプロジェクトのスクリプトプロパティだけ。メモ帳やスクリーンショットに残さない</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <p class="kicker">まとめ<span class="time-badge">⏱ 目安2分</span></p>
+    <h1>チェックリスト</h1>
+    <ul>
+      <li>☐ 秘密情報はスクリプトプロパティだけに置いた</li>
+      <li>☐ AIに貼る前に、秘密情報と個人情報をダミーに置き換えた</li>
+      <li>☐ <code>git add</code> の前に <code>git status</code> を見た</li>
+      <li>☐ 秘密情報が入ったブランチからPRを作っていない</li>
+      <li>☐ うっかり上げたら、すぐ先輩に伝える</li>
+    </ul>
+  </div>
+
+  <div class="slide center">
+    <p class="kicker" style="justify-content:center; gap:0.8rem;">おわり<span class="time-badge">⏱ 目安1分</span></p>
+    <h1>おつかれさまでした！</h1>
+    <p>読み終わったら、担当の先輩に「番外編を読みました」と伝えてください。分からないところがあれば、遠慮なく聞いてください。</p>
+  </div>
+
+<div class="slide-footer">
+  <button id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="footer-center">
+    <span id="count"></span>
+    <button id="copyAllBtn" class="gemini-btn" onclick="copyAllPrompt()">🧭 <span class="btn-label">講義全体をGeminiに伝える</span></button>
+    <button id="copySlideBtn" class="gemini-btn" onclick="copySlidePrompt()">🤖 <span class="btn-label">詰まったらコピー</span></button>
+    <button id="reportErrorBtn" class="report-btn" onclick="reportError()">🐛 <span class="btn-label">エラー報告</span></button>
+  </div>
+  <button id="nextBtn" onclick="go(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+    document.getElementById('count').textContent = (idx + 1) + ' / ' + slides.length;
+    document.getElementById('prevBtn').disabled = idx === 0;
+    document.getElementById('nextBtn').disabled = idx === slides.length - 1;
+    document.getElementById('copyAllBtn').style.display = idx === 0 ? 'inline-block' : 'none';
+  }
+
+  function go(delta) {
+    idx = Math.min(Math.max(idx + delta, 0), slides.length - 1);
+    render();
+  }
+
+  function slideText(el) {
+    return el.textContent.replace(/\s+/g, ' ').trim();
+  }
+
+  function copyToClipboard(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = btn.textContent;
+      btn.textContent = '✅ コピーしました';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    });
+  }
+
+  function copySlidePrompt() {
+    const content = slideText(slides[idx]);
+    const prompt = 'サークルアプリ開発の研修講義のスライドを見ています。\n\n'
+      + '【このページの内容】\n' + content + '\n\n'
+      + '【分からない点】\n（ここに具体的に何が分からないかを書いてください）\n\n'
+      + '上記を踏まえて、プログラミング未経験者にも分かるように、専門用語を避けて易しく説明してください。';
+    copyToClipboard(prompt, document.getElementById('copySlideBtn'));
+  }
+
+  function copyAllPrompt() {
+    const allText = Array.from(slides).map((s, i) => 'ページ' + (i + 1) + ': ' + slideText(s)).join('\n\n');
+    const prompt = '以下は「サークルアプリ開発 オンボーディング」というオンライン講義のスライド全体の内容です。\n\n'
+      + allText + '\n\n'
+      + 'この内容を覚えておいてください。これから私が個別の質問をするので、'
+      + 'プログラミング未経験者にも分かるように、専門用語を避けて易しく答えてください。';
+    copyToClipboard(prompt, document.getElementById('copyAllBtn'));
+  }
+
+  function reportError() {
+    const kicker = slides[idx].querySelector('.kicker');
+    const h1 = slides[idx].querySelector('h1');
+    const kickerLabel = kicker ? kicker.childNodes[0].textContent.trim() : '';
+    const pageLabel = kickerLabel + (h1 ? ' / ' + h1.textContent.trim() : '');
+    const title = encodeURIComponent(`[エラー報告] ${document.title} - ${pageLabel}`);
+    const body = encodeURIComponent(
+      `## どのページで\n${pageLabel}（${idx + 1} / ${slides.length}ページ目）\n\n` +
+      `## 実行したコマンド\n\`\`\`\n（ここに貼り付け）\n\`\`\`\n\n` +
+      `## 出たエラーメッセージ\n\`\`\`\n（ここに貼り付け）\n\`\`\`\n\n` +
+      `## 環境\n（Codespaces / ローカルDocker Desktop / ローカルDocker Engine など）`
+    );
+    window.open(`https://github.com/HUWA253/onboarding-slides/issues/new?title=${title}&body=${body}`, '_blank');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+  });
+
+  render();
+
+  function toggleMenu() {
+    document.getElementById('sideDrawer').classList.toggle('open');
+    document.getElementById('drawerBackdrop').classList.toggle('open');
+  }
+  function showHelp() {
+    closeMenu();
+    document.getElementById('helpOverlay').classList.add('active');
+  }
+  function closeHelp() {
+    document.getElementById('helpOverlay').classList.remove('active');
+  }
+  function closeMenu() {
+    document.getElementById('sideDrawer').classList.remove('open');
+    document.getElementById('drawerBackdrop').classList.remove('open');
+  }
+  (function highlightCurrentSession() {
+    const current = location.pathname.split('/').pop();
+    document.querySelectorAll('.side-drawer a[data-session]').forEach((a) => {
+      if (a.getAttribute('data-session') === current) a.classList.add('active');
+    });
+  })();
+  (function setupMenuHover() {
+    const menuBtn = document.getElementById('menuBtn');
+    const drawer = document.getElementById('sideDrawer');
+    let closeTimer;
+    const openMenu = () => {
+      clearTimeout(closeTimer);
+      drawer.classList.add('open');
+      document.getElementById('drawerBackdrop').classList.add('open');
+    };
+    const scheduleClose = () => { closeTimer = setTimeout(closeMenu, 300); };
+    menuBtn.addEventListener('mouseenter', openMenu);
+    menuBtn.addEventListener('mouseleave', scheduleClose);
+    drawer.addEventListener('mouseenter', () => clearTimeout(closeTimer));
+    drawer.addEventListener('mouseleave', scheduleClose);
+  })();
+</script>
+
+</body>
+</html>
